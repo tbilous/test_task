@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe User, type: :model do
   it { should have_many(:teams).dependent(:destroy) }
+  it { should have_many(:subscriptions).dependent(:destroy) }
 
   describe '#owner_of?' do
     let(:author) { create(:user) }
