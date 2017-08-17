@@ -6,7 +6,6 @@ RSpec.describe User, type: :model do
   it { should have_many(:teams_collaborator).through(:collaborators).source(:team) }
   it { should have_many(:tasks) }
 
-
   describe '#owner_of?' do
     let(:author) { create(:user) }
     let(:stranger) { create(:user) }
