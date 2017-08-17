@@ -1,5 +1,4 @@
 FactoryGirl.define do
-  factory :subscription do
-    
+  factory :collaborator do
   end
 end

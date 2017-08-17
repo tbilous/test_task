@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Subscription, type: :model do
+RSpec.describe Collaborator, type: :model do
   it { should belong_to(:user) }
   it { should belong_to(:team) }
   it { should define_enum_for(:status).with(%i[awaiting approved rejected]) }

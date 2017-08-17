@@ -1,6 +1,11 @@
 Rails.application.routes.draw do
-  resources :teams
+
+  resources :teams do
+    resources :collaborators, shallow: true, only: %i(create update destroy)
+  end
+
   get 'home/index'
+
   devise_for :users
 
   devise_scope :user do

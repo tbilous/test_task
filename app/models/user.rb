@@ -6,7 +6,8 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :trackable, :validatable
 
   has_many :teams, dependent: :destroy
-  has_many :subscriptions, dependent: :destroy
+  has_many :collaborators, dependent: :destroy
+  has_many :teams_collaborator, through: :collaborators, source: :team
 
   def owner_of?(object)
     id == object.user_id
