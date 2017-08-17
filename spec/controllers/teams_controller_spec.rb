@@ -55,7 +55,7 @@ RSpec.describe TeamsController, type: :controller do
     it_behaves_like 'when user is authorized' do
       before { get :new }
 
-      it 'assigns new question to @ticket' do
+      it 'assigns new team to @team' do
         expect(assigns(:team)).to be_a_new(Team)
       end
 
