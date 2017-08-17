@@ -8,6 +8,7 @@ class User < ApplicationRecord
   has_many :teams, dependent: :destroy
   has_many :collaborators, dependent: :destroy
   has_many :teams_collaborator, through: :collaborators, source: :team
+  has_many :tasks
 
   def owner_of?(object)
     id == object.user_id

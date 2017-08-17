@@ -36,6 +36,7 @@ gem 'responders', '2.4.0'
 gem 'rspec', '3.6.0'
 gem 'slim', '3.0.8'
 gem 'slim-rails', '3.1.2'
+gem 'stateful_enum', '0.4.0'
 
 group :development, :test do
   gem 'byebug', platforms: %i[mri mingw x64_mingw]

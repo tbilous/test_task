@@ -3,15 +3,9 @@ require 'rails_helper'
 RSpec.describe User, type: :model do
   it { should have_many(:teams).dependent(:destroy) }
   it { should have_many(:collaborators).dependent(:destroy) }
-  it { should have_many(:teams_collaborator).through(:collaborators).source(:user) }
-  it do
-    should have_many(:teams__accepted_collaborator).through(:collaborators).source(:user)
-                                                   .conditions(collaborators: { status: 'accepted' })
-  end
-  it do
-    should have_many(:teams__awaiting_collaborator).conditions(collaborators: { status: 'awaiting' })
-      .through(:collaborators).source(:user)
-  end
+  it { should have_many(:teams_collaborator).through(:collaborators).source(:team) }
+  it { should have_many(:tasks) }
+
 
   describe '#owner_of?' do
     let(:author) { create(:user) }
