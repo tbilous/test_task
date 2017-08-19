@@ -1,6 +1,6 @@
 class TeamsController < ApplicationController
   before_action :authenticate_user!
-  before_action :load_team, only: %i[edit destroy update]
+  before_action :load_team, only: %i[edit destroy update show]
 
   respond_to :js, only: %i[update destroy]
 

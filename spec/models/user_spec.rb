@@ -19,7 +19,7 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe '#his_name' do
+  describe '#his_name_is' do
     let(:user) { create(:user, email: 'test@test.com') }
 
     it { expect(user.his_name_is).to eq('test') }

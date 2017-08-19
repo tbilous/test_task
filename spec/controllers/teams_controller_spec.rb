@@ -27,52 +27,6 @@ RSpec.describe TeamsController, type: :controller do
     end
   end
 
-  describe 'GET #index' do
-    let(:teams) do
-      create_list(:team, 2, user_id: user.id)
-    end
-
-    it_behaves_like 'when user is authorized' do
-      before { get :index }
-
-      it 'list all' do
-        expect(assigns(:teams)).to match_array(teams)
-      end
-      it 'renders the index template' do
-        expect(response).to render_template :index
-      end
-    end
-    it_behaves_like 'when user is unauthorized' do
-      before { get :index }
-
-      it 'renders the index template' do
-        expect(response).to redirect_to new_user_session_path
-      end
-    end
-  end
-
-  describe 'GET #new' do
-    it_behaves_like 'when user is authorized' do
-      before { get :new }
-
-      it 'assigns new team to @team' do
-        expect(assigns(:team)).to be_a_new(Team)
-      end
-
-      it 'renders the new template' do
-        expect(response).to render_template :new
-      end
-    end
-
-    it_behaves_like 'when user is unauthorized' do
-      before { get :new }
-
-      it 'redirect to sign in path' do
-        expect(response).to redirect_to new_user_session_path
-      end
-    end
-  end
-
   describe 'PATCH update' do
     let(:team) { create(:team, user_id: user.id) }
 
@@ -127,6 +81,84 @@ RSpec.describe TeamsController, type: :controller do
     it_behaves_like 'when user is unauthorized' do
       it { expect { subject }.to_not change(Team, :count) }
       it { expect(subject).to have_http_status(401) }
+    end
+  end
+
+  describe 'GET #new' do
+    it_behaves_like 'when user is authorized' do
+      before { get :new }
+
+      it 'assigns new team to @team' do
+        expect(assigns(:team)).to be_a_new(Team)
+      end
+
+      it 'renders the new template' do
+        expect(response).to render_template :new
+      end
+    end
+
+    it_behaves_like 'when user is unauthorized' do
+      before { get :new }
+
+      it 'redirect to sign in path' do
+        expect(response).to redirect_to new_user_session_path
+      end
+    end
+  end
+
+  describe 'GET #index' do
+    let(:teams) do
+      create_list(:team, 2, user_id: user.id)
+    end
+
+    it_behaves_like 'when user is authorized' do
+      before { get :index }
+
+      it 'list all' do
+        expect(assigns(:teams)).to match_array(teams)
+      end
+      it 'renders the index template' do
+        expect(response).to render_template :index
+      end
+    end
+    it_behaves_like 'when user is unauthorized' do
+      before { get :index }
+
+      it 'renders the index template' do
+        expect(response).to redirect_to new_user_session_path
+      end
+    end
+  end
+
+  describe 'GET #show' do
+    let!(:team) { create(:team, user_id: user.id) }
+
+    subject { get :show, params: { id: team.id } }
+
+    it_behaves_like 'when user is unauthorized' do
+      it { expect(subject).to redirect_to new_user_session_path }
+    end
+
+    it_behaves_like 'when user is authorized' do
+      before { subject }
+      it { expect(response).to render_template :show }
+      it { expect(assigns(:team)).to eq(team) }
+    end
+  end
+
+  describe 'GET #edit' do
+    let!(:team) { create(:team, user_id: user.id) }
+
+    subject { get :edit, params: { id: team.id } }
+
+    it_behaves_like 'when user is unauthorized' do
+      it { expect(subject).to redirect_to new_user_session_path }
+    end
+
+    it_behaves_like 'when user is authorized' do
+      before { subject }
+      it { expect(response).to render_template :edit }
+      it { expect(assigns(:team)).to eq(team) }
     end
   end
 end
