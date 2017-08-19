@@ -24,4 +24,12 @@ RSpec.describe User, type: :model do
 
     it { expect(user.his_name_is).to eq('test') }
   end
+
+  describe 'not_in_team' do
+    let!(:users) { create_list(:user, 3) }
+    let(:user) { create(:user) }
+    let(:team) { create(:team, user_id: user.id) }
+
+    it { expect(User.not_in_team(team, team.user_id)).to match_array(users) }
+  end
 end

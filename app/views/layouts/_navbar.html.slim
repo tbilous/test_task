@@ -1,0 +1,26 @@
+.container-fluid
+  nav.navbar.navbar-default.navbar-xs role="navigation"
+    .navbar-header
+      button.navbar-toggle data-target="#bs-example-navbar-collapse-1" data-toggle="collapse" type="button"
+        span.sr-only Toggle navigation
+        span.icon-bar
+        span.icon-bar
+        span.icon-bar
+      a.navbar-brand href="/"
+        b Team aggregator
+    #bs-example-navbar-collapse-1.collapse.navbar-collapse
+      ul.nav.navbar-nav
+        - if user_signed_in?
+          li
+            a href="#"
+              i.glyphicon.glyphicon-bell
+          li.dropdown
+            a.dropdown-toggle data-toggle="dropdown" href="#"
+              i.glyphicon.glyphicon-user
+              b.caret
+            ul.dropdown-menu
+              li
+                a data-method="delete" href="#{destroy_user_session_path}" rel="nofollow" = t('sign_out')
+              li.divider
+              li
+                = link_to t('edit_user'), edit_user_registration_path

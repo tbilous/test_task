@@ -81,4 +81,30 @@ RSpec.describe CollaboratorsController, type: :controller do
       it { expect(subject).to have_http_status(401) }
     end
   end
+
+  describe 'GET #new' do
+    let!(:users) { create_list(:user, 3) }
+
+    subject { get :new, params: { team_id: team.id } }
+
+    it_behaves_like 'when user is authorized' do
+      before { subject }
+
+      it 'assigns new collaborator to @collaborator' do
+        expect(assigns(:users)).to match_array(users)
+      end
+
+      it 'renders the new template' do
+        expect(response).to render_template :new
+      end
+    end
+
+    it_behaves_like 'when user is unauthorized' do
+
+      it 'redirect to sign in path' do
+        expect(subject).to redirect_to new_user_session_path
+      end
+    end
+  end
+
 end

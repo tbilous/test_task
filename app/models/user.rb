@@ -10,6 +10,11 @@ class User < ApplicationRecord
   has_many :teams_collaborator, through: :collaborators, source: :team
   has_many :tasks
 
+  scope :not_in_team, (lambda do |team, user_id|
+    where.not(id: user_id).joins('LEFT JOIN collaborators ON collaborators.user_id = users.id')
+      .where('collaborators.team_id != ? OR collaborators.id is null', team.id)
+  end)
+
   def owner_of?(object)
     id == object.user_id
   end

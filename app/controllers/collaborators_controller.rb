@@ -1,10 +1,11 @@
 class CollaboratorsController < ApplicationController
   before_action :authenticate_user!
   before_action :load_collaborator, only: %i[destroy update]
-  before_action :load_team, only: %i[create]
+  before_action :load_team, only: %i[create new]
   before_action :load_user, only: %i[create]
 
   respond_to :json
+  respond_to :html, only: :new
 
   def create
     @collaborator = @team.collaborators.create(strong_params)
@@ -18,6 +19,10 @@ class CollaboratorsController < ApplicationController
 
   def destroy
     respond_with(@collaborator.destroy)
+  end
+
+  def new
+    @users = User.not_in_team(@team, @team.user_id)
   end
 
   private
