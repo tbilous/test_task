@@ -20,6 +20,7 @@ feature 'First sign in', %q{
 
       expect(current_path).to eq authenticated_root_path
       expect(page).to have_content t('devise.sessions.signed_in')
+      expect(page).to have_content t('sign_out')
     end
   end
 end

@@ -13,7 +13,10 @@
  *= require_self
  */
 @import url('https://fonts.googleapis.com/css?family=Roboto&subset=cyrillic');
+
+@import "font-awesome";
 @import "bootstrap-sprockets";
 @import "custom_bootstrap";
 @import "vendor/toastr";
 @import "utils/spacing";
+
