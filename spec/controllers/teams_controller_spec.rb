@@ -132,6 +132,12 @@ RSpec.describe TeamsController, type: :controller do
 
   describe 'GET #show' do
     let!(:team) { create(:team, user_id: user.id) }
+    let!(:users) { create_list(:user, 2) }
+    let!(:collaborator1) { create(:collaborator, user_id: users[0].id, team_id: team.id, status: 'approved') }
+    let!(:collaborator2) { create(:collaborator, user_id: users[1].id, team_id: team.id, status: 'approved') }
+    let!(:task1) { create(:task, user_id: users[0].id, team_id: team.id) }
+    let!(:task2) { create(:task, user_id: users[1].id, team_id: team.id) }
+
 
     subject { get :show, params: { id: team.id } }
 
@@ -143,6 +149,7 @@ RSpec.describe TeamsController, type: :controller do
       before { subject }
       it { expect(response).to render_template :show }
       it { expect(assigns(:team)).to eq(team) }
+      it { expect(assigns(:tasks)).to include(task1, task2) }
     end
   end
 

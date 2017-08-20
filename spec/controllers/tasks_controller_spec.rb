@@ -11,8 +11,7 @@ RSpec.describe TasksController, type: :controller do
     let(:params) do
       {
         team_id: team.id,
-        user_id: worker.id,
-        task: attributes_for(:task).merge(form_params)
+        task: attributes_for(:task, user_id: user.id).merge(form_params)
       }
     end
 

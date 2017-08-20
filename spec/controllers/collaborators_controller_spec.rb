@@ -33,9 +33,9 @@ RSpec.describe CollaboratorsController, type: :controller do
     let(:params) do
       {
         id: collaborate.id,
-        collaborator: { status: '' }.merge(form_params),
+        status: '',
         format: :json
-      }
+      }.merge(form_params)
     end
 
     statuses = %w[approved rejected]

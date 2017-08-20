@@ -14,10 +14,13 @@
 //= require i18n
 //= require i18n/translations
 //= require rails-ujs
+//= require skim
 //= require bootstrap-sprockets
 //= require twitter/typeahead
 //= require_tree ./vendor
 //= require_tree ./shared
 //= require_tree ./widgets
-//= require collaborators
+//= require_tree ./templates
 //= require 'data-confirm-modal'
+//= require collaborators
+//= require home

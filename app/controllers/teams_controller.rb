@@ -22,7 +22,9 @@ class TeamsController < ApplicationController
     @team = current_user.teams.new
   end
 
-  def show; end
+  def show
+    @tasks = @team.tasks.includes(:user)
+  end
 
   def edit; end
 

@@ -1,14 +1,15 @@
 class TasksController < ApplicationController
   before_action :authenticate_user!
-  before_action :load_team, only: %i[create]
-  before_action :load_user, only: %i[create]
+  before_action :load_team, only: %i[create new]
+  # before_action :load_user, only: %i[create]
   before_action :load_task, only: %i[destroy update]
 
   respond_to :json, only: %i[destroy update]
 
   def create
-    @task = @team.tasks.create(strong_params.merge(user_id: params[:user_id]))
-    respond_with(@task)
+    # binding.pry
+    @task = @team.tasks.create(strong_params)
+    respond_with(@task, location: team_path(@team.id))
   end
 
   def update

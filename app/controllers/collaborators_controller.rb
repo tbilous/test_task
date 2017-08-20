@@ -13,8 +13,8 @@ class CollaboratorsController < ApplicationController
   end
 
   def update
-    @collaborator.update(status: strong_params[:status])
-    respond_with(@collaborator)
+    @collaborator.update(update_params)
+    render json: @collaborator
   end
 
   def destroy
@@ -34,6 +34,10 @@ class CollaboratorsController < ApplicationController
 
   def strong_params
     params.require(:collaborator).permit(:team_id, :user_id, :status)
+  end
+
+  def update_params
+    params.permit(:status)
   end
 
   def load_team

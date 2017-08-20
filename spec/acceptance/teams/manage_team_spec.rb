@@ -5,6 +5,7 @@ feature 'I cant to manage teams', %q{
   As a user
   I want to add team and delete him
   I want to add team members
+  I took new invite to team
 } do
 
   include_context 'users'
@@ -15,7 +16,7 @@ feature 'I cant to manage teams', %q{
 
   context 'as user' do
     let!(:users) { create_list(:user, 10) }
-    scenario 'I want to add team and delete him', :js do
+    scenario 'I want to add team and delete him', :js, :feature do
       visit authenticated_root_path
       find('.fa-group').trigger('click')
       click_link(t('team.index'))
@@ -48,7 +49,7 @@ feature 'I cant to manage teams', %q{
       sleep 1
       expect(page).to_not have_content 'My Awesome Team'
     end
-    scenario 'I want to add team members', :js do
+    scenario 'I want to add team members', :js, :feature do
       visit teams_path
 
       visit authenticated_root_path
@@ -73,6 +74,19 @@ feature 'I cant to manage teams', %q{
 
       within '#awaitingTeamMembers' do
         expect(page).to have_content users[1].email.split('@')[0]
+      end
+    end
+
+    describe 'took invites', :js, :feature do
+      let(:team_owner) { create(:user) }
+      let(:team) { create(:team, user_id: team_owner.id) }
+      let(:collaborator) { create(:collaborator, team_id: team.id, user_id: user.id) }
+
+      scenario 'I took new invite to team', :js, :feature do
+        visit authenticated_root_path
+        within '#awaitingCollTeams' do
+          expect(page).to_not have_content team.title
+        end
       end
     end
   end

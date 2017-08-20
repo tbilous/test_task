@@ -43,6 +43,7 @@ gem 'stateful_enum', '0.4.0'
 gem 'active_model_serializers', '0.10.6'
 gem 'oj', '3.3.5'
 gem 'oj_mimic_json', '1.0.1'
+gem 'skim'
 gem 'twitter-typeahead-rails', '0.11.1'
 
 group :development, :test do

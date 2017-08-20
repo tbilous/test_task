@@ -22,6 +22,9 @@ App.utils =
       console.log(data.status)
     App.utils.errorMessage message
 
+  render: (template, data) ->
+    JST["templates/#{template}"](data)
+
 $ ->
   App.utils.successMessage(App.flash?.success)
   App.utils.errorMessage(App.flash?.error)

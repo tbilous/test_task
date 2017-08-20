@@ -1,6 +1,4 @@
 require 'rails_helper'
-# require 'rspec/page-regression'
-require 'capybara/poltergeist'
 require 'rack_session_access/capybara'
 require 'puma'
 require 'capybara/email/rspec'
@@ -48,10 +46,6 @@ RSpec.configure do |config|
   #   Capybara::Selenium::Driver.new(app, :browser => :firefox)
   # end
   Capybara.server = :puma
-
-  # RSpec::PageRegression.configure do |c|
-  #   c.threshold = 0.01
-  # end
 
   config.use_transactional_fixtures = false
 

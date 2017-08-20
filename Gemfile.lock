@@ -314,6 +314,11 @@ GEM
       childprocess (~> 0.5)
       rubyzip (~> 1.0)
       websocket (~> 1.0)
+    skim (0.10.0)
+      coffee-script
+      coffee-script-source (>= 1.2.0)
+      slim (>= 3.0)
+      sprockets (>= 2, < 4)
     slim (3.0.8)
       temple (>= 0.7.6, < 0.9)
       tilt (>= 1.3.3, < 2.1)
@@ -425,6 +430,7 @@ DEPENDENCIES
   sass-rails (~> 5.0)
   selenium-webdriver (= 2.53.4)
   shoulda-matchers!
+  skim
   slim (= 3.0.8)
   slim-rails (= 3.1.2)
   spring (= 2.0.2)
