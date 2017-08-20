@@ -7,6 +7,9 @@ class User < ApplicationRecord
 
   has_many :teams, dependent: :destroy
   has_many :collaborators, dependent: :destroy
+  has_many :approved_collaborators, -> { where(collaborators: { status: 'approved' }) }, class_name: 'Collaborator'
+  has_many :awaiting_collaborators, -> { where(collaborators: { status: 'awaiting' }) }, class_name: 'Collaborator'
+  has_many :rejected_collaborators, -> { where(collaborators: { status: 'rejected' }) }, class_name: 'Collaborator'
   has_many :teams_collaborator, through: :collaborators, source: :team
   has_many :tasks
 
@@ -14,6 +17,7 @@ class User < ApplicationRecord
     where.not(id: user_id).joins('LEFT JOIN collaborators ON collaborators.user_id = users.id')
       .where('collaborators.team_id != ? OR collaborators.id is null', team.id)
   end)
+
   scope :mail_select, (->(query) { where('email LIKE :query', query: "%#{query}%") })
 
   def self.select_search(query)

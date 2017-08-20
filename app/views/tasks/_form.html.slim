@@ -1,0 +1,25 @@
+.row
+  .col-sm-8.col-sm-offset-2
+    .panel.panel-default.devise-bs
+      .panel-heading
+        h4
+          = t('task.add')
+      .panel-body
+        = form_for shallow_resource(@team, @task) do |f|
+          .form-group
+            = f.label :title
+            = f.text_field :title, autofocus: true, class: 'form-control', required: true
+          .form-group
+            = f.label :body
+            = f.text_area :body, rows: 6, class: 'form-control', required: true
+          .form-group
+            = f.label :task_type
+            = f.select :task_type,
+                    options_for_select(Task.type_attributes_for_select), {},
+                    class: 'form-control', required: true
+          .form-group
+            = f.label :user_id
+            = f.select :user_id,
+                    options_for_select(@team.team_users.approved.map { |i| [i.email, i.id] }), {},
+                    class: 'form-control', required: true
+          = f.submit t('task.add'), class: 'btn btn-primary'

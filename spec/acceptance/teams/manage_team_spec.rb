@@ -6,6 +6,7 @@ feature 'I cant to manage teams', %q{
   I want to add team and delete him
   I want to add team members
   I took new invite to team
+  I want to add task to my team and assign collaborator
 } do
 
   include_context 'users'
@@ -77,7 +78,7 @@ feature 'I cant to manage teams', %q{
       end
     end
 
-    describe 'took invites', :js, :feature do
+    describe 'took invites', :feature do
       let(:team_owner) { create(:user) }
       let(:team) { create(:team, user_id: team_owner.id) }
       let(:collaborator) { create(:collaborator, team_id: team.id, user_id: user.id) }
@@ -86,6 +87,34 @@ feature 'I cant to manage teams', %q{
         visit authenticated_root_path
         within '#awaitingCollTeams' do
           expect(page).to_not have_content team.title
+        end
+      end
+    end
+
+    describe 'I want to add task to my team and assign collaborator', :feature do
+      let!(:team) { create(:team, user_id: user.id) }
+      let!(:collaborating) { create(:collaborator, user_id: users.first.id, team_id: team.id) }
+      before { collaborating.update!(status: 'approved') }
+      let(:task) { attributes_for(:task) }
+
+      scenario 'I want to add task to my team' do
+        visit authenticated_root_path
+        click_on team.title
+        click_on t('task.add')
+
+        fill_in 'task_title', with: task[:title]
+        fill_in 'task_body', with: task[:body]
+        select users.first.email, from: 'task_user_id'
+        select t('activerecord.attributes.task.type.bug_fix'), from: 'task_task_type'
+
+        within '#new_task' do
+          click_on t('task.add')
+        end
+
+        within '#teamTasks' do
+          expect(page).to have_content task[:title]
+          expect(page).to have_content users.first.his_name_is
+          expect(page).to have_content t('activerecord.attributes.task.status.open')
         end
       end
     end

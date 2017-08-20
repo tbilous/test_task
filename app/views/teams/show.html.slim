@@ -6,4 +6,28 @@ hr
 - if @team.team_users.approved.present?
   h2 = t('activerecord.models.collaborator', count: @team.collaborators.count)
 
+  table.table.table-hover
+    thead
+      tr
+        th  =t('user.user_name')
+        th  =t('user.user_email')
+    tbody#teamMembers
+      - @team.team_users.approved.each do |user|
+        tr id="approvedUserId#{user.id}"
+          td = user.his_name_is
+          td = user.email
 
+  = link_to t('task.add'), new_team_task_path(team_id: @team.id), class: 'btn btn-primary'
+hr
+  table.table.table-hover
+    thead
+      tr
+        th = t('activerecord.attributes.task.title')
+        th = t('user.user_name')
+        th = t('task.state')
+    tbody#teamTasks
+      - @tasks.each do |task|
+        tr id="userTask#{task.id}"
+          td = task.title
+          td = task.user.his_name_is
+          td = t("activerecord.attributes.task.status.#{task.state}")

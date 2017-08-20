@@ -1,3 +1,4 @@
 --require spec_helper
 --colour
---format doc
+--format progress
+--format ParallelTests::RSpec::RuntimeLogger --out log/parallel_runtime_rspec.log

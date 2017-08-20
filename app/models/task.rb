@@ -31,4 +31,16 @@ class Task < ApplicationRecord
   end
 
   validates_presence_of :title, :body, :task_type
+
+  def self.type_attributes_for_select
+    task_types.map do |type, _|
+      [I18n.t("activerecord.attributes.#{model_name.i18n_key}.type.#{type}"), type]
+    end
+  end
+
+  def self.state_attributes_for_select
+    states.map do |type, _|
+      [I18n.t("activerecord.attributes.#{model_name.i18n_key}.status.#{type}"), type]
+    end
+  end
 end

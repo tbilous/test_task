@@ -12,9 +12,11 @@ en:
       task:
         one: 'Task'
         many: 'Tasks'
+        other: 'Tasks'
       team:
         one: 'Team'
         many: 'Teams'
+        other: 'Teams'
       collaborator:
         one: 'Collaborator'
         many: 'Collaborators'
@@ -26,11 +28,14 @@ en:
           approved: 'Approved'
           rejected: 'Rejected'
       task:
-        task_type:
+        title: 'Title'
+        body: 'Description'
+        user_id: 'User'
+        type:
           bug_fix: 'Bug Fix'
           code: 'Code'
           test: 'Test'
-        state:
+        status:
           open: 'New'
           assigned: 'Open'
           in_progress: 'In progress'
@@ -56,6 +61,11 @@ en:
     send_success: 'Invite was send successfully'
     sent: 'Sent invite'
     no_members: 'No members'
+    have_new:
+      one: 'Have new %{count} invite'
+      many: 'Have new invites'
+      other: 'Have new invites'
+    have_not: 'You do not waiting have invites'
     titles:
       new_title1: 'Team members'
       new_title2: 'The invites are awaiting approval'
@@ -64,3 +74,6 @@ en:
   user:
     user_name: 'User name'
     user_email: 'User email'
+  task:
+    add: 'Add task'
+    state: 'State'

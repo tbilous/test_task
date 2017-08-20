@@ -11,9 +11,16 @@
     #bs-example-navbar-collapse-1.collapse.navbar-collapse
       ul.nav.navbar-nav
         - if user_signed_in?
-          li
-            a href="#"
-              i.glyphicon.glyphicon-bell
+          /- if current_user.collaborators.present?
+          /  li data-toggle="tooltip" data-placement="bottom" title="#{t('collaborator.have_new', count: current_user.collaborators.count)}"
+          /    a href="#"
+          /      = fa_icon 'bell-o'
+          /      span.label.label-primary
+          /        = current_user.collaborators.count
+          /- else
+          /  li data-toggle="tooltip" data-placement="bottom" title="#{t('collaborator.have_not')}"
+          /    a.disabled href="#"
+          /      = fa_icon 'bell-slash'
           li.dropdown  title="#{t('profile')}"
             a.dropdown-toggle data-toggle="dropdown" href="#"
               = fa_icon 'user'
