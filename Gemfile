@@ -46,6 +46,7 @@ gem 'oj_mimic_json', '1.0.1'
 gem 'twitter-typeahead-rails', '0.11.1'
 
 group :development, :test do
+  gem 'parallel_tests', '2.14.2'
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
   gem 'childprocess', '0.7.1'
   gem 'factory_girl_rails', '4.8.0'
