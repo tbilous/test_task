@@ -1,8 +1,8 @@
 require 'rails_helper'
 require 'acceptance_helper'
 
-feature 'I cant to manage teams', %q{
-  As a user
+feature 'I can to manage teams', %q{
+  As a team owner
   I want to add team and delete him
   I want to add team members
   I took new invite to team
@@ -15,8 +15,8 @@ feature 'I cant to manage teams', %q{
     login_as(user)
   end
 
+  let!(:users) { create_list(:user, 10) }
   context 'as user' do
-    let!(:users) { create_list(:user, 10) }
     scenario 'I want to add team and delete him', :js, :feature do
       visit authenticated_root_path
       find('.fa-group').trigger('click')

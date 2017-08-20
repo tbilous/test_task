@@ -14,7 +14,7 @@ module AcceptanceHelper
 
   # Wait materialize-css animation completes
   def wait_animation
-    sleep 0.4
+    sleep 0.8
   end
 
   def switch_subdomain(name = 'dev')

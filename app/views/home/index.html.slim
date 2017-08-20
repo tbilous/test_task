@@ -1,2 +1,82 @@
-h1 Home#index
-p Find me in app/views/home/index.html.slim
+h1 My activities
+.row
+  .col-xs-12
+    .panel-group#myTasks
+      .panel.panel-default
+        .panel-heading My tasks
+        .panel-body
+          table.table
+            thead
+              tr
+                th Task title
+                th Task type
+                th Task status
+                th.text-center Action
+            tbody
+              - current_user.tasks.each do |t|
+                tr id="task#{t.id}"
+                  td = t.title
+                  td = t("activerecord.attributes.task.status.#{t.state}")
+                  td.text-center
+                    /= link_to collaborator_path(c.id, status: :approved),
+                    /        id: "approve#{c.id}",
+                    /        method: :patch,
+                    /        class: 'js-coll btn btn-sm btn-success',
+                    /        data: {type: :json, action: 'approve', remote: true} do
+                    /  = fa_icon 'flag-o'
+                  td.text-center
+                    /= link_to collaborator_path(c.id, status: :rejected),
+                    /        id: "reject#{c.id}",
+                    /        method: :patch,
+                    /        class: 'js-coll btn btn-sm btn-danger',
+                    /        data: {type: :json, action: 'reject', remote: true} do
+                    /  = fa_icon 'close'
+.row
+  .col-xs-12
+    .panel.panel-default
+      .panel-heading My owned teams
+      .panel-body
+        .panel-group#userOwnTeams
+          - current_user.teams.each do |t|
+            .panel.panel-default
+              .panel-body
+                = link_to t.title, team_path(t.id), id: "ownTeam#{t.id}"
+.row
+  .col-md-7
+    .panel.panel-default#awaitingCollTeams
+      .panel-heading Wait for approve
+      .panel-body
+        table.table
+          thead
+            tr
+              th Team name
+              th.text-center Approve
+              th.text-center Reject
+          tbody
+            - @collaborators.each do |c|
+              tr id="appWaiting#{c.id}"
+                td = c.team.title
+                td.text-center
+                  = link_to collaborator_path(c.id, status: :approved),
+                          id: "approve#{c.id}",
+                          method: :patch,
+                          class: 'js-coll btn btn-sm btn-success',
+                          data: {type: :json, action: 'approve', remote: true} do
+                    = fa_icon 'flag-o'
+                td.text-center
+                  = link_to collaborator_path(c.id, status: :rejected),
+                          id: "reject#{c.id}",
+                          method: :patch,
+                          class: 'js-coll btn btn-sm btn-danger',
+                          data: {type: :json, action: 'reject', remote: true} do
+                    = fa_icon 'close'
+
+  .col-md-5
+    .panel.panel-default
+      .panel-heading Wait for approve
+      .panel-body
+        .panel-group#userCollTeams
+          - @approved_teams.each do |t|
+            .panel.panel-default
+              .panel-body
+                = link_to t.title, team_path(t.id), id:"collTeam#{t.id}"
