@@ -138,7 +138,6 @@ RSpec.describe TeamsController, type: :controller do
     let!(:task1) { create(:task, user_id: users[0].id, team_id: team.id) }
     let!(:task2) { create(:task, user_id: users[1].id, team_id: team.id) }
 
-
     subject { get :show, params: { id: team.id } }
 
     it_behaves_like 'when user is unauthorized' do
