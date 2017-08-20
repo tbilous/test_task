@@ -3,18 +3,19 @@ h1 My activities
   .col-xs-12
     .panel-group#myTasks
       .panel.panel-default
-        .panel-heading My tasks
+        .panel-heading = t('task.my_tasks')
         .panel-body
           table.table
             thead
               tr
-                th Task title
-                th Task type
-                th Task status
-                th.text-center Action
+                th = t('activerecord.attributes.task.title')
+                th = t('task.type')
+                th = t('task.state')
+                th.text-center = t('action')
             tbody
               - current_user.tasks.each do |t|
                 tr id="task#{t.id}"
+                  td = t("activerecord.attributes.task.type.#{t.task_type}")
                   td = t.title
                   td = t("activerecord.attributes.task.status.#{t.state}")
                   td.text-center
@@ -24,7 +25,7 @@ h1 My activities
                     /        class: 'js-coll btn btn-sm btn-success',
                     /        data: {type: :json, action: 'approve', remote: true} do
                     /  = fa_icon 'flag-o'
-                  td.text-center
+                  /td.text-center
                     /= link_to collaborator_path(c.id, status: :rejected),
                     /        id: "reject#{c.id}",
                     /        method: :patch,
@@ -34,7 +35,7 @@ h1 My activities
 .row
   .col-xs-12
     .panel.panel-default
-      .panel-heading My owned teams
+      .panel-heading = t('team.index')
       .panel-body
         .panel-group#userOwnTeams
           - current_user.teams.each do |t|
@@ -44,14 +45,14 @@ h1 My activities
 .row
   .col-md-7
     .panel.panel-default#awaitingCollTeams
-      .panel-heading Wait for approve
+      .panel-heading = t('home.title3')
       .panel-body
         table.table
           thead
             tr
-              th Team name
-              th.text-center Approve
-              th.text-center Reject
+              th = t('team.name')
+              th.text-center = t('team.approve')
+              th.text-center = t('team.reject')
           tbody
             - @collaborators.each do |c|
               tr id="appWaiting#{c.id}"
@@ -73,7 +74,7 @@ h1 My activities
 
   .col-md-5
     .panel.panel-default
-      .panel-heading Wait for approve
+      .panel-heading = t('home.title4')
       .panel-body
         .panel-group#userCollTeams
           - @approved_teams.each do |t|

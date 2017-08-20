@@ -1,4 +1,5 @@
 en:
+  action: 'Action'
   a_yes: 'Yes'
   a_no: 'No'
   confirm: 'Are you sure?'
@@ -56,6 +57,9 @@ en:
     index_coll: 'My collaboration team'
     add_user: 'Add collaborator'
     manage_team: 'Manage Team'
+    name: 'Team name'
+    approve: 'Approve'
+    reject: 'Reject'
   collaborator:
     add: 'Add collaborator'
     send_success: 'Invite was send successfully'
@@ -77,3 +81,9 @@ en:
   task:
     add: 'Add task'
     state: 'State'
+    type: 'Type'
+    my_tasks: 'My tasks'
+  home:
+    title1: 'My activities'
+    title3: 'Wait for approve'
+    title4: 'Approved teams'
