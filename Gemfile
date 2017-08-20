@@ -28,6 +28,7 @@ gem 'devise', '4.3.0'
 gem 'devise-bootstrap-views', '0.0.11'
 gem 'devise-i18n', '1.2.0'
 gem 'font-awesome-rails', '4.7.0.2'
+gem 'faker', '1.8.4'
 gem 'i18n', '0.8.6'
 gem 'i18n-js', '3.0.1'
 gem 'kaminari', '1.0.1'
@@ -38,11 +39,16 @@ gem 'slim', '3.0.8'
 gem 'slim-rails', '3.1.2'
 gem 'stateful_enum', '0.4.0'
 
+# json response
+gem 'active_model_serializers', '0.10.6'
+gem 'oj', '3.3.5'
+gem 'oj_mimic_json', '1.0.1'
+gem 'twitter-typeahead-rails', '0.11.1'
+
 group :development, :test do
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
   gem 'childprocess', '0.7.1'
   gem 'factory_girl_rails', '4.8.0'
-  gem 'faker', '1.8.4'
   gem 'pry-byebug', '3.4.2'
   gem 'pry-rails', '0.3.6'
   gem 'rails-controller-testing', '1.0.2'
@@ -65,11 +71,12 @@ group :test do
   gem 'capybara-webkit', '1.14.0'
   gem 'database_cleaner', '1.6.1'
   gem 'fuubar', '2.2.0'
+  gem 'geckodriver-helper'
   gem 'json_spec', '1.1.5'
   gem 'launchy', '2.4.3'
   gem 'poltergeist', '1.16.0'
   gem 'rack_session_access', '0.1.1'
-  gem 'selenium-webdriver', '3.5.1'
+  gem 'selenium-webdriver', '2.53.4'
   gem 'shoulda-matchers', git: 'https://github.com/thoughtbot/shoulda-matchers.git', branch: 'rails-5'
 end
 

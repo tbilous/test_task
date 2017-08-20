@@ -1,10 +1,10 @@
 class CollaboratorsController < ApplicationController
   before_action :authenticate_user!
   before_action :load_collaborator, only: %i[destroy update]
-  before_action :load_team, only: %i[create new]
+  before_action :load_team, only: %i[create new staff]
   before_action :load_user, only: %i[create]
 
-  respond_to :json
+  respond_to :json, only: %i[create update destroy staff]
   respond_to :html, only: :new
 
   def create
@@ -22,13 +22,18 @@ class CollaboratorsController < ApplicationController
   end
 
   def new
-    @users = User.not_in_team(@team, @team.user_id)
+    @collaborators = @team.team_users
+  end
+
+  def staff
+    @users = User.not_in_team(@team, @team.user_id).select_search(params[:q])
+    respond_with @users
   end
 
   private
 
   def strong_params
-    params.permit(:team_id, :user_id, :status)
+    params.require(:collaborator).permit(:team_id, :user_id, :status)
   end
 
   def load_team
@@ -36,7 +41,7 @@ class CollaboratorsController < ApplicationController
   end
 
   def load_user
-    @user = User.find(params[:user_id])
+    @user = User.find(params[:collaborator][:user_id])
   end
 
   def load_collaborator

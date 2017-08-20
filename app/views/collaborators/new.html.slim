@@ -1,0 +1,53 @@
+h1 =(t'team.add_user')
+
+hr.mb-3
+h3 = t('collaborator.titles.new_title1')
+table.table.table-hover
+  thead
+    tr
+      th  =t('user.user_name')
+      th  =t('user.user_email')
+  tbody#teamMembers
+    - if @collaborators.approved.present?
+      - @collaborators.approved.each do |user|
+        tr id="approvedUserId#{user.id}"
+          td = user.his_name_is
+          td = user.email
+    - else
+      tr.js-detach
+        th =t('collaborator.no_members')
+hr.mb-3
+
+
+h3 = t('collaborator.titles.new_title2')
+table.table.table-hover
+  thead
+    tr
+      th =t('user.user_name')
+      th =t('user.user_email')
+  tbody#awaitingTeamMembers
+    - if @collaborators.awaiting.present?
+      - @collaborators.awaiting.each do |user|
+        tr id="awaitingUserId#{user.id}"
+          td = user.his_name_is
+          td = user.email
+    - else
+      tr.js-detach
+        th =t('collaborator.no_members')
+hr.mb-3
+
+h3 = t('collaborator.titles.new_title3')
+.row
+  .col-sm-8
+    = form_for shallow_resource(@team, @team.collaborators.new),
+            remote: true, data: {type: 'json', team: @team.id }, html: {class: 'form-horizontal'} do |f|
+      .form-group
+        .col-xs-10
+          = f.hidden_field :user_id
+          = text_field_tag :users, '',
+                  class: 'form-control typeahead js-program-typehead ',
+                  placeholder: 'users', required: true
+        .col-xs-2
+          = f.button class: 'btn btn-primary sent-form',
+                  data: {toggle: 'tooltip', placement: 'left'}, title: t('collaborator.sent') do
+            = fa_icon 'plus'

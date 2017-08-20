@@ -1,0 +1,9 @@
+h1 #{t('activerecord.models.team.one')}: #{@team.title}
+hr
+= link_to t('collaborator.add'), new_team_collaborator_path(team_id: @team.id), class: 'btn btn-primary'
+
+hr
+- if @team.team_users.approved.present?
+  h2 = t('activerecord.models.collaborator', count: @team.collaborators.count)
+
+

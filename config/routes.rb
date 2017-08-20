@@ -3,8 +3,10 @@ Rails.application.routes.draw do
   resources :teams do
     resources :collaborators, shallow: true, only: %i(new create update destroy)
     resources :tasks, shallow: true, only: %i(new create update destroy)
+    get 'collaborators/staff'
   end
 
+  get 'collaborators/staff'
   get 'home/index'
 
   devise_for :users

@@ -7,7 +7,14 @@ RSpec.describe CollaboratorsController, type: :controller do
   let(:collaborator) { create(:user) }
 
   describe 'POST #create' do
-    subject { post :create, params: { team_id: team.id, user_id: collaborator.id, format: :json } }
+    let(:params) do
+      {
+        team_id: team.id,
+        collaborator: { user_id: user.id },
+        format: :json
+      }
+    end
+    subject { post :create, params: params }
 
     it_behaves_like 'when user is unauthorized' do
       it { expect { subject }.to_not change(Collaborator, :count) }
@@ -23,14 +30,14 @@ RSpec.describe CollaboratorsController, type: :controller do
     let(:collaborate) { create(:collaborator, user_id: collaborator.id, team_id: team.id) }
 
     let(:form_params) { {} }
-
     let(:params) do
       {
         id: collaborate.id,
-        status: '',
+        collaborator: { status: '' }.merge(form_params),
         format: :json
-      }.merge(form_params)
+      }
     end
+
     statuses = %w[approved rejected]
 
     subject do
@@ -91,7 +98,7 @@ RSpec.describe CollaboratorsController, type: :controller do
       before { subject }
 
       it 'assigns new collaborator to @collaborator' do
-        expect(assigns(:users)).to match_array(users)
+        expect(assigns(:collaborators)).to_not contain_exactly(user)
       end
 
       it 'renders the new template' do
@@ -100,11 +107,27 @@ RSpec.describe CollaboratorsController, type: :controller do
     end
 
     it_behaves_like 'when user is unauthorized' do
-
       it 'redirect to sign in path' do
         expect(subject).to redirect_to new_user_session_path
       end
     end
   end
 
+  describe 'GET #staff' do
+    let!(:users) { create_list(:user, 3) }
+
+    subject { get :staff, params: { q: users[0].email, team_id: team.id, format: :json } }
+
+    it_behaves_like 'when user is authorized' do
+      before { subject }
+
+      it 'assigns new collaborator to @collaborator' do
+        expect(response.body).to have_json_size(1)
+      end
+    end
+
+    it_behaves_like 'when user is unauthorized' do
+      it { expect(subject).to have_http_status(401) }
+    end
+  end
 end

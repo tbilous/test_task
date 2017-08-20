@@ -1,0 +1,12 @@
+.row
+  .col-sm-8.col-sm-offset-2
+    .panel.panel-default.devise-bs
+      .panel-heading
+        h4
+          = t('team.add')
+      .panel-body
+        = form_for(@team, html: { role: 'form' }) do |f|
+          .form-group
+            = f.label :title
+            = f.text_field :title, autofocus: true, class: 'form-control', required: true
+          = f.submit t('team.add'), class: 'btn btn-primary'

@@ -1,0 +1,23 @@
+h1 #{t('my_teams')}
+
+hr
+table.table
+  thead
+    tr
+      th = t('activerecord.models.team.many')
+      th = t('team.team_user.many')
+      th
+  tbody
+    - @teams.each do |team|
+      tr id="myOwnedTeam#{team.id}"
+        td = link_to team.title, team_path(team.id)
+        td
+          span.badge = team.team_users.approved.count
+        td = button_to team, method: :delete, remote: true, class: 'btn btn-danger btn-sm',
+                title: t('confirm'),
+                data: {confirm: t('confirm'), commit: t('a_yes'), cancel: t('a_no')} do
+          = fa_icon 'trash-o'
+
+hr
+
+= link_to t('team.add'), new_team_path, class: 'btn btn-primary'

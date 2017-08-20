@@ -10,10 +10,14 @@
 // Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for details
 // about supported directives.
 //
-//= require rails-ujs
 //= require jquery
-//= require bootstrap-sprockets
 //= require i18n
 //= require i18n/translations
+//= require rails-ujs
+//= require bootstrap-sprockets
+//= require twitter/typeahead
 //= require_tree ./vendor
 //= require_tree ./shared
+//= require_tree ./widgets
+//= require collaborators
+//= require 'data-confirm-modal'

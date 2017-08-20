@@ -6,6 +6,7 @@ require 'puma'
 require 'capybara/email/rspec'
 require 'i18n'
 require 'capybara/poltergeist'
+require 'capybara/webkit'
 require 'selenium-webdriver'
 
 RSpec.configure do |config|
@@ -17,8 +18,8 @@ RSpec.configure do |config|
   #   default_url_options[:locale] = I18n.default_locale
   # end
   #
-  Capybara.server_host = '0.0.0.0'
-  Capybara.server_port = 3001 + ENV['TEST_ENV_NUMBER'].to_i
+  Capybara.server_host = '10.0.2.15'
+  Capybara.server_port = 5000 + ENV['TEST_ENV_NUMBER'].to_i
   Capybara.default_max_wait_time = 2
   Capybara.save_path = './tmp/capybara_output'
   Capybara.always_include_port = true # for correct app_host
@@ -34,9 +35,18 @@ RSpec.configure do |config|
     )
   end
 
-  Capybara.javascript_driver = :poltergeist
+  # Capybara.javascript_driver = :poltergeist
   # Capybara.javascript_driver = :selenium
+  Capybara.javascript_driver = :webkit
 
+  Capybara::Webkit.configure do |webkit|
+    webkit.allow_url('10.0.2.15')
+    webkit.allow_url('fonts.googleapis.com')
+  end
+
+  # Capybara.register_driver :selenium do |app|
+  #   Capybara::Selenium::Driver.new(app, :browser => :firefox)
+  # end
   Capybara.server = :puma
 
   # RSpec::PageRegression.configure do |c|
