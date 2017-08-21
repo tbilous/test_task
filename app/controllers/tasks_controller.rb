@@ -2,7 +2,7 @@ class TasksController < ApplicationController
   before_action :authenticate_user!
   before_action :load_team, only: %i[create new]
   # before_action :load_user, only: %i[create]
-  before_action :load_task, only: %i[destroy update edit]
+  before_action :load_task, only: %i[destroy update edit show]
 
   respond_to :json, only: %i[destroy update]
 
@@ -28,6 +28,8 @@ class TasksController < ApplicationController
   def edit
     @team = @task.team
   end
+
+  def show; end
 
   private
 

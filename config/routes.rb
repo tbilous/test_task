@@ -2,7 +2,7 @@ Rails.application.routes.draw do
 
   resources :teams do
     resources :collaborators, shallow: true, only: %i(new create update destroy)
-    resources :tasks, shallow: true, only: %i(new edit create update destroy)
+    resources :tasks, shallow: true
     get 'collaborators/staff'
   end
 

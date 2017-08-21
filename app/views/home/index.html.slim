@@ -11,12 +11,11 @@ h1 My activities
                 th = t('activerecord.attributes.task.title')
                 th = t('task.type')
                 th = t('task.state')
-                th.text-center = t('action')
             tbody
               - current_user.tasks.each do |t|
                 tr id="task#{t.id}"
+                  td = link_to t.title, task_path(t.id)
                   td = t("activerecord.attributes.task.type.#{t.task_type}")
-                  td = t.title
                   td = t("activerecord.attributes.task.status.#{t.state}")
                   td.text-center
                     /= link_to collaborator_path(c.id, status: :approved),

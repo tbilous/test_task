@@ -20,15 +20,13 @@ feature 'I can to manage teams', %q{
   let!(:collaborating2) do
     create(:collaborator, user_id: users[2].id, team_id: team.id, status: 'approved')
   end
-  let(:task) { attributes_for(:task) }
 
   context 'as a team owner' do
     background do
       login_as(user)
     end
-
-
-    scenario 'I want to add/edit/destroy task' do
+    let(:task) { attributes_for(:task) }
+    scenario 'I want to add/edit/destroy task', :feature do
       visit authenticated_root_path
       click_on team.title
       click_on t('task.add')
@@ -66,13 +64,17 @@ feature 'I can to manage teams', %q{
     end
   end
 
-  context 'as a team owner' do
+  context 'as a collaborator' do
+    let!(:task) { create(:task, team_id: team.id, user_id: users.first.id) }
+
     background do
       login_as(users.first)
     end
 
-    scenario 'I want see my tasks' do
-
+    scenario 'I want see my tasks', :js, :feature do
+      visit authenticated_root_path
+      click_on(task.title)
+      expect(page).to have_content(task.body)
     end
 
     scenario 'I want change task`s status' do

@@ -154,4 +154,25 @@ RSpec.describe TasksController, type: :controller do
     #   end
     # end
   end
+
+  describe 'GET #show' do
+    let(:task) { create(:task, user_id: user.id, team_id: team.id) }
+    subject { get :show, params: { id: task.id } }
+
+    it_behaves_like 'when user is unauthorized' do
+      before { subject }
+
+      it 'redirect to sign in path' do
+        expect(response).to redirect_to new_user_session_path
+      end
+    end
+
+    it_behaves_like 'when user is authorized' do
+      before { subject }
+
+      it 'assigns new task to @task' do
+        expect(assigns(:task)).to eq(task)
+      end
+    end
+  end
 end
