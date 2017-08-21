@@ -50,6 +50,12 @@ RSpec.describe TeamsController, type: :controller do
       it { expect(team.title).to_not eql params[:team][:title] }
     end
 
+    it_behaves_like 'when user not is owner' do
+      it { expect(team.title).to_not eql params[:team][:title] }
+      it { expect(subject).to redirect_to authenticated_root_path }
+    end
+
+
     it_behaves_like 'when user is authorized' do
       before { subject }
       it { expect(team.title).to eql params[:team][:title] }
@@ -81,6 +87,11 @@ RSpec.describe TeamsController, type: :controller do
     it_behaves_like 'when user is unauthorized' do
       it { expect { subject }.to_not change(Team, :count) }
       it { expect(subject).to have_http_status(401) }
+    end
+
+    it_behaves_like 'when user not is owner' do
+      it { expect { subject }.to_not change(Team, :count) }
+      it { expect(subject).to have_http_status(302) }
     end
   end
 
@@ -144,6 +155,10 @@ RSpec.describe TeamsController, type: :controller do
       it { expect(subject).to redirect_to new_user_session_path }
     end
 
+    it_behaves_like 'when user not is owner' do
+      it { expect(subject).to redirect_to authenticated_root_path }
+    end
+
     it_behaves_like 'when user is authorized' do
       before { subject }
       it { expect(response).to render_template :show }
@@ -159,6 +174,10 @@ RSpec.describe TeamsController, type: :controller do
 
     it_behaves_like 'when user is unauthorized' do
       it { expect(subject).to redirect_to new_user_session_path }
+    end
+
+    it_behaves_like 'when user not is owner' do
+      it { expect(subject).to redirect_to authenticated_root_path }
     end
 
     it_behaves_like 'when user is authorized' do

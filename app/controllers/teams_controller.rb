@@ -1,6 +1,7 @@
 class TeamsController < ApplicationController
   before_action :authenticate_user!
   before_action :load_team, only: %i[edit destroy update show]
+  before_action :check_access, only: %i[edit destroy update show]
 
   respond_to :js, only: %i[update destroy]
 
@@ -33,6 +34,10 @@ class TeamsController < ApplicationController
   end
 
   private
+
+  def check_access
+    redirect_to authenticated_root_path unless current_user.owner_of?(@team)
+  end
 
   def strong_params
     params.require(:team).permit(:title)

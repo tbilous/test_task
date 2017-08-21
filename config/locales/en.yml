@@ -83,7 +83,7 @@ en:
     add: 'Add task'
     state: 'State'
     type: 'Type'
-    my_tasks:
+    my_tasks: 'My tasks'
     edit: 'Edit task'
     set: 'Set state - '
     success: 'State was updated'

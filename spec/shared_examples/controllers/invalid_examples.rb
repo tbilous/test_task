@@ -58,6 +58,5 @@ shared_examples 'unauthorized user create' do
 end
 
 shared_examples 'when user not is owner' do
-  include_context 'unauthorized user'
   include_context 'non owner user'
 end

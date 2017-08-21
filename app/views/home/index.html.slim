@@ -66,4 +66,4 @@ h1 My activities
           - @approved_teams.each do |t|
             .panel.panel-default
               .panel-body
-                = link_to t.title, team_path(t.id), id:"collTeam#{t.id}"
+                p id="collTeam#{t.id}" = t.title
