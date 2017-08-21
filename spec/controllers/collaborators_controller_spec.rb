@@ -21,13 +21,18 @@ RSpec.describe CollaboratorsController, type: :controller do
       it { expect(subject).to have_http_status(401) }
     end
 
+    it_behaves_like 'when user not is owner' do
+      it { expect { subject }.to_not change(Collaborator, :count) }
+      it { expect(subject).to have_http_status(302) }
+    end
+
     it_behaves_like 'when user is authorized' do
       it { expect { subject }.to change(Collaborator, :count).by(1) }
     end
   end
 
   describe 'PATCH update' do
-    let(:collaborate) { create(:collaborator, user_id: collaborator.id, team_id: team.id) }
+    let(:collaborate) { create(:collaborator, user_id: non_owner.id, team_id: team.id) }
 
     let(:form_params) { {} }
     let(:params) do
@@ -55,12 +60,22 @@ RSpec.describe CollaboratorsController, type: :controller do
       end
     end
 
-    it_behaves_like 'when user is authorized' do
+    it_behaves_like 'when user not is owner' do
       before { subject }
       statuses.each do |status|
         describe "to status #{status}" do
           let(:form_params) { { status: status } }
           it { expect(collaborate.status).to eql status }
+        end
+      end
+    end
+
+    it_behaves_like 'when user is owner' do
+      before { subject }
+      statuses.each do |status|
+        describe "to status #{status}" do
+          let(:form_params) { { status: status } }
+          it { expect(collaborate.status).to_not eql status }
         end
       end
     end
@@ -83,9 +98,19 @@ RSpec.describe CollaboratorsController, type: :controller do
       it { expect(subject).to have_http_status(204) }
     end
 
+    it_behaves_like 'when user is owner' do
+      it { expect { subject }.to change(Collaborator, :count) }
+      it { expect(subject).to have_http_status(204) }
+    end
+
     it_behaves_like 'when user is unauthorized' do
       it { expect { subject }.to_not change(Collaborator, :count) }
       it { expect(subject).to have_http_status(401) }
+    end
+
+    it_behaves_like 'when user not is owner' do
+      it { expect { subject }.to_not change(Collaborator, :count) }
+      it { expect(subject).to have_http_status(302) }
     end
   end
 
@@ -111,6 +136,12 @@ RSpec.describe CollaboratorsController, type: :controller do
         expect(subject).to redirect_to new_user_session_path
       end
     end
+
+    it_behaves_like 'when user not is owner' do
+      it 'redirect to sign in path' do
+        expect(subject).to redirect_to authenticated_root_path
+      end
+    end
   end
 
   describe 'GET #staff' do
@@ -118,7 +149,7 @@ RSpec.describe CollaboratorsController, type: :controller do
 
     subject { get :staff, params: { q: users[0].email, team_id: team.id, format: :json } }
 
-    it_behaves_like 'when user is authorized' do
+    it_behaves_like 'when user is owner' do
       before { subject }
 
       it 'assigns new collaborator to @collaborator' do
@@ -128,6 +159,10 @@ RSpec.describe CollaboratorsController, type: :controller do
 
     it_behaves_like 'when user is unauthorized' do
       it { expect(subject).to have_http_status(401) }
+    end
+
+    it_behaves_like 'when user not is owner' do
+      it { expect(subject).to have_http_status(302) }
     end
   end
 end

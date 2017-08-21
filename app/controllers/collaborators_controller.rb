@@ -4,6 +4,10 @@ class CollaboratorsController < ApplicationController
   before_action :load_team, only: %i[create new staff]
   before_action :load_user, only: %i[create]
 
+  before_action :check_pm_access, only: %i[create new staff]
+  before_action :check_col_access, only: %i[update]
+  before_action :check_pm_through_access, only: %i[destroy]
+
   respond_to :json, only: %i[create update destroy staff]
   respond_to :html, only: :new
 
@@ -50,5 +54,17 @@ class CollaboratorsController < ApplicationController
 
   def load_collaborator
     @collaborator = Collaborator.find(params[:id])
+  end
+
+  def check_pm_access
+    redirect_to authenticated_root_path unless current_user.owner_of?(@team)
+  end
+
+  def check_pm_through_access
+    redirect_to authenticated_root_path unless current_user.owner_of?(@collaborator.team)
+  end
+
+  def check_col_access
+    redirect_to authenticated_root_path unless current_user.owner_of?(@collaborator)
   end
 end
