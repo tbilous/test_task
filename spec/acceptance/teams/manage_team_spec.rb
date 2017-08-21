@@ -6,7 +6,7 @@ feature 'I can to manage teams', %q{
   I want to add team and delete him
   I want to add team members
   I took new invite to team
-  I want to add task to my team and assign collaborator
+  I want to add/edit task in my team and assign collaborator
 } do
 
   include_context 'users'
@@ -78,26 +78,17 @@ feature 'I can to manage teams', %q{
       end
     end
 
-    describe 'took invites', :feature do
-      let(:team_owner) { create(:user) }
-      let(:team) { create(:team, user_id: team_owner.id) }
-      let(:collaborator) { create(:collaborator, team_id: team.id, user_id: user.id) }
-
-      scenario 'I took new invite to team', :js, :feature do
-        visit authenticated_root_path
-        within '#awaitingCollTeams' do
-          expect(page).to_not have_content team.title
-        end
-      end
-    end
-
-    describe 'I want to add task to my team and assign collaborator', :feature do
+    describe 'I want to add/edit task in my  team and assign collaborator', :feature do
       let!(:team) { create(:team, user_id: user.id) }
-      let!(:collaborating) { create(:collaborator, user_id: users.first.id, team_id: team.id) }
-      before { collaborating.update!(status: 'approved') }
+      let!(:collaborating) do
+        create(:collaborator, user_id: users.first.id, team_id: team.id, status: 'approved')
+      end
+      let!(:collaborating2) do
+        create(:collaborator, user_id: users[2].id, team_id: team.id, status: 'approved')
+      end
       let(:task) { attributes_for(:task) }
 
-      scenario 'I want to add task to my team' do
+      scenario 'I want to add/edit/destroy task' do
         visit authenticated_root_path
         click_on team.title
         click_on t('task.add')
@@ -108,12 +99,28 @@ feature 'I can to manage teams', %q{
         select t('activerecord.attributes.task.type.bug_fix'), from: 'task_task_type'
 
         within '#new_task' do
-          click_on t('task.add')
+          click_on t('save')
         end
 
         within '#teamTasks' do
           expect(page).to have_content task[:title]
           expect(page).to have_content users.first.his_name_is
+          expect(page).to have_content t('activerecord.attributes.task.status.open')
+        end
+
+        within '#teamTasks' do
+          click_on t('task.edit')
+        end
+
+        fill_in 'task_title', with: '123'
+        fill_in 'task_body', with: '123'
+        select users[2].email, from: 'task_user_id'
+        select t('activerecord.attributes.task.type.test'), from: 'task_task_type'
+        click_on t('save')
+
+        within '#teamTasks' do
+          expect(page).to have_content '123'
+          expect(page).to have_content users[2].his_name_is
           expect(page).to have_content t('activerecord.attributes.task.status.open')
         end
       end

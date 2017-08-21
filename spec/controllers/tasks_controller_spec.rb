@@ -103,6 +103,28 @@ RSpec.describe TasksController, type: :controller do
         expect(assigns(:task)).to be_a_new(Task)
       end
     end
+  end
+
+  describe 'GET #edit' do
+    let(:task) { create(:task, user_id: user.id, team_id: team.id) }
+    subject { get :edit, params: { id: task.id } }
+
+    it_behaves_like 'when user is unauthorized' do
+      before { subject }
+
+      it 'redirect to sign in path' do
+        expect(response).to redirect_to new_user_session_path
+      end
+    end
+
+    it_behaves_like 'when user is authorized' do
+      before { subject }
+
+      it 'assigns new task to @task' do
+        expect(assigns(:task)).to eq(task)
+      end
+      it { expect(assigns(:team)).to eq(team) }
+    end
 
     # describe 'when user is authorized' do
     #   describe 'when user is teammaker' do

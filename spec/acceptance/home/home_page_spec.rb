@@ -50,7 +50,7 @@ feature 'I can to manage teams', %q{
     describe 'took task' do
       before { collaborator.update!(status: 'approved') }
 
-      scenario 'I reject new invite to team', :js, :feature do
+      scenario 'I see task and can to open he', :js, :feature do
         within "#task#{tasks.first.id}" do
           expect(page).to have_content tasks.first.title
           expect(page).to have_content t("activerecord.attributes.task.status.#{tasks.first.state}")

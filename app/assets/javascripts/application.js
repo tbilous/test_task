@@ -19,7 +19,6 @@
 //= require twitter/typeahead
 //= require_tree ./vendor
 //= require_tree ./shared
-//= require_tree ./widgets
 //= require_tree ./templates
 //= require 'data-confirm-modal'
 //= require collaborators

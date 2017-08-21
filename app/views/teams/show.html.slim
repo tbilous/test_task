@@ -25,9 +25,16 @@ hr
         th = t('activerecord.attributes.task.title')
         th = t('user.user_name')
         th = t('task.state')
+        th
+        th
     tbody#teamTasks
       - @tasks.each do |task|
         tr id="userTask#{task.id}"
           td = task.title
           td = task.user.his_name_is
           td = t("activerecord.attributes.task.status.#{task.state}")
+          td = link_to t('task.edit'), edit_task_path(task)
+          td = button_to task, method: :delete, remote: true, class: 'btn btn-danger btn-sm',
+                  title: t('confirm'),
+                  data: {confirm: t('confirm'), commit: t('a_yes'), cancel: t('a_no')} do
+            = fa_icon 'trash-o'

@@ -22,4 +22,4 @@
             = f.select :user_id,
                     options_for_select(@team.team_users.approved.map { |i| [i.email, i.id] }), {},
                     class: 'form-control', required: true
-          = f.submit t('task.add'), class: 'btn btn-primary'
+          = f.submit t('save'), class: 'btn btn-primary'
