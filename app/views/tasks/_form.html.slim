@@ -15,11 +15,12 @@
           .form-group
             = f.label :task_type
             = f.select :task_type,
-                    options_for_select(Task.type_attributes_for_select), {},
+                    options_for_select(Task.type_attributes_for_select, @task.task_type), {},
                     class: 'form-control', required: true
           .form-group
             = f.label :user_id
             = f.select :user_id,
-                    options_for_select(@team.team_users.approved.map { |i| [i.email, i.id] }), {},
+                    options_for_select(@team.team_users.approved.map { |i| [i.email, i.id] },
+                            (@task.user.id if @task.user.present?) ), {},
                     class: 'form-control', required: true
           = f.submit t('save'), class: 'btn btn-primary'
