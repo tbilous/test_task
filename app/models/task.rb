@@ -13,24 +13,25 @@ class Task < ApplicationRecord
       transition assigned: :in_progress
     end
 
+    event :close do
+      before do
+        self.resolved_at = Time.current
+      end
+      transition all - [:done] => :done
+    end
+
     event :resolve do
       before do
         self.resolved_at = Time.current
       end
 
-      transition %i[open assigned] => :in_progress
-    end
-
-    event :close do
-      after do
-        Notifier.notify "Task##{id} has been done."
-      end
-
-      transition all - [:done] => :done
+      transition %i[open assigned in_progress] => :done
     end
   end
 
   validates_presence_of :title, :body, :task_type
+
+  scope :ready, (-> { where('state IN (1, 2)') })
 
   def self.type_attributes_for_select
     task_types.map do |type, _|
@@ -40,7 +41,11 @@ class Task < ApplicationRecord
 
   def self.state_attributes_for_select
     states.map do |type, _|
-      [I18n.t("activerecord.attributes.#{model_name.i18n_key}.status.#{type}"), type]
+      [I18n.t("activerecord.attributes.#{model_name.i18n_key}.state.#{type}"), type]
     end
+  end
+
+  def next_role
+    Task.states.key(Task.states[state] + 1)
   end
 end

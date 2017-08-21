@@ -1,10 +1,10 @@
 <% if flash[:alert].present? %>
-message = "<%=j flash[:notice] %>";
-App.utils.successMessage(message);
+message = "<%=j flash[:alert] %>";
+App.utils.errorMessage(message);
 <% end %>
 
 <% if flash[:notice].present? %>
 $("#myOwnedTeam<%= @team.id %>").detach();
 message = "<%=j flash[:notice] %>";
-App.utils.errorMessage(message);
+App.utils.successMessage(message);
 <% end %>

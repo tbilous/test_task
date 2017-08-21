@@ -3,7 +3,7 @@ require 'acceptance_helper'
 
 feature 'I can to manage teams', %q{
   As a team owner
-  I want to add/edit task in my team and assign collaborator
+  I want to add/edit/assign/assign task in my team
   As a collaborator
   I want see my tasks
   I want change task`s status
@@ -26,7 +26,7 @@ feature 'I can to manage teams', %q{
       login_as(user)
     end
     let(:task) { attributes_for(:task) }
-    scenario 'I want to add/edit/destroy task', :feature do
+    scenario 'I want to add/edit/assign/assign task', :js, :feature do
       visit authenticated_root_path
       click_on team.title
       click_on t('task.add')
@@ -43,7 +43,7 @@ feature 'I can to manage teams', %q{
       within '#teamTasks' do
         expect(page).to have_content task[:title]
         expect(page).to have_content users.first.his_name_is
-        expect(page).to have_content t('activerecord.attributes.task.status.open')
+        expect(page).to have_content t('task.assign')
       end
 
       within '#teamTasks' do
@@ -59,26 +59,52 @@ feature 'I can to manage teams', %q{
       within '#teamTasks' do
         expect(page).to have_content '123'
         expect(page).to have_content users[2].his_name_is
-        expect(page).to have_content t('activerecord.attributes.task.status.open')
+        expect(page).to have_content t('task.assign')
+      end
+
+      within "#userTask#{Task.last.id}" do
+        click_on t('task.assign')
+        wait_animation
+        expect(page).to have_content t('activerecord.attributes.task.state.assigned')
+      end
+
+      within "#userTask#{Task.last.id}" do
+        find('.btn-danger').trigger('click')
+      end
+
+      wait_animation
+      click_on  t('a_yes')
+      wait_animation
+
+      within '#teamTasks' do
+        expect(page).to_not have_content '123'
+        expect(page).to_not have_content users[2].his_name_is
+        expect(page).to_not have_content t('activerecord.attributes.task.state.open')
       end
     end
   end
 
   context 'as a collaborator' do
-    let!(:task) { create(:task, team_id: team.id, user_id: users.first.id) }
+    let!(:task) { create(:task, team_id: team.id, user_id: users.first.id, state: :assigned) }
 
     background do
       login_as(users.first)
+      visit authenticated_root_path
     end
 
-    scenario 'I want see my tasks', :js, :feature do
-      visit authenticated_root_path
-      click_on(task.title)
-      expect(page).to have_content(task.body)
+    scenario 'I want see my tasks', :feature do
+      expect(page).to have_content(task.title)
+      expect(page).to have_content t('activerecord.attributes.task.state.assigned')
     end
 
     scenario 'I want change task`s status' do
-
+      click_on(task.title)
+      expect(page).to have_content(task.body)
+      click_on t('task.actions.in_progress')
+      wait_animation
+      within '.label' do
+        expect(page).to have_content t('activerecord.attributes.task.state.in_progress')
+      end
     end
   end
 end

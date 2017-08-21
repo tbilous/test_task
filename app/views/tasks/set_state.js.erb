@@ -1,0 +1,10 @@
+<% js = escape_javascript(
+  render(
+    partial: 'tasks/task',
+    locals: { task: @task }
+  )
+) %>
+$("#taskBlock").html("<%= js %>");
+<% if flash[:alert].present? %>
+App.utils.errorMessage("<%=j flash[:alert] %>");
+<% end %>

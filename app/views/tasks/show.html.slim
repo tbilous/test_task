@@ -1,15 +1,5 @@
-h1 #{t('activerecord.models.task')}: #{@task.title}
+h1 #{t('activerecord.models.task.one')}: #{@task.title}
 hr
 
-.panel-group
-  .panel.panel-default
-    .panel-heading
-      .row
-        .col-xs-10
-          = @task.title
-        .col-xs-2
-          = @task.state
-
-
-    .panel-body
-      = @task.body
+#taskBlock
+  = render 'tasks/task', task: @task

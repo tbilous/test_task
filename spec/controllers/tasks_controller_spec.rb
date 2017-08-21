@@ -68,7 +68,7 @@ RSpec.describe TasksController, type: :controller do
     let(:params) do
       {
         id: task.id,
-        format: :json
+        format: :js
       }
     end
 
@@ -76,7 +76,7 @@ RSpec.describe TasksController, type: :controller do
 
     it_behaves_like 'when user is authorized' do
       it { expect { subject }.to change(Task, :count) }
-      it { expect(subject).to have_http_status(204) }
+      it { expect(subject).to have_http_status(200) }
     end
 
     it_behaves_like 'when user is unauthorized' do
@@ -172,6 +172,67 @@ RSpec.describe TasksController, type: :controller do
 
       it 'assigns new task to @task' do
         expect(assigns(:task)).to eq(task)
+      end
+    end
+  end
+
+  describe 'PUT #set_state' do
+    let(:form_params) { {} }
+    let(:task) { create(:task, user_id: user.id, team_id: team.id) }
+    let(:params) do
+      { task_id: task.id, format: :js, state: 'open' }.merge(form_params)
+    end
+    subject { put :set_state, params: params }
+
+    it_behaves_like 'when user is unauthorized' do
+      it { expect(subject).to have_http_status(401) }
+    end
+
+    it_behaves_like 'when user is authorized' do
+      describe 'assigned' do
+        let(:form_params) { { state: 'assigned' } }
+
+        before do
+          subject
+          task.reload
+        end
+        it 'assigns new task to @task' do
+          expect(task.state).to eq('assigned')
+        end
+      end
+      describe 'in_progress' do
+        let(:task) { create(:task, user_id: user.id, team_id: team.id, state: :assigned) }
+        let(:form_params) { { state: 'in_progress' } }
+
+        before do
+          subject
+          task.reload
+        end
+        it 'assigns new task to @task' do
+          expect(task.state).to eq('in_progress')
+        end
+      end
+      describe 'done' do
+        let(:form_params) { { state: 'done' } }
+
+        before do
+          subject
+          task.reload
+        end
+        it 'assigns new task to @task' do
+          expect(task.state).to eq('done')
+        end
+      end
+      describe 'restart' do
+        let(:form_params) { { state: 'restart' } }
+
+        before do
+          subject
+          task.reload
+        end
+        it 'assigns new task to @task' do
+          expect(task.state).to eq('assigned')
+        end
       end
     end
   end

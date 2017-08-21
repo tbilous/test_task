@@ -12,25 +12,12 @@ h1 My activities
                 th = t('task.type')
                 th = t('task.state')
             tbody
-              - current_user.tasks.each do |t|
+              - current_user.tasks.ready.each do |t|
                 tr id="task#{t.id}"
                   td = link_to t.title, task_path(t.id)
                   td = t("activerecord.attributes.task.type.#{t.task_type}")
-                  td = t("activerecord.attributes.task.status.#{t.state}")
-                  td.text-center
-                    /= link_to collaborator_path(c.id, status: :approved),
-                    /        id: "approve#{c.id}",
-                    /        method: :patch,
-                    /        class: 'js-coll btn btn-sm btn-success',
-                    /        data: {type: :json, action: 'approve', remote: true} do
-                    /  = fa_icon 'flag-o'
-                  /td.text-center
-                    /= link_to collaborator_path(c.id, status: :rejected),
-                    /        id: "reject#{c.id}",
-                    /        method: :patch,
-                    /        class: 'js-coll btn btn-sm btn-danger',
-                    /        data: {type: :json, action: 'reject', remote: true} do
-                    /  = fa_icon 'close'
+                  td = t("activerecord.attributes.task.state.#{t.state}")
+
 .row
   .col-xs-12
     .panel.panel-default

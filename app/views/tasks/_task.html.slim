@@ -1,0 +1,32 @@
+.panel-group
+  .panel.panel-default
+    .panel-heading
+      .row
+        .col-xs-8
+          = task.title
+        .col-xs-4.text-right
+          .label.label-primary = t("activerecord.attributes.task.state.#{task.state}")
+    .panel-body
+      = task.body
+
+    .panel-footer.text-right#taskAction
+      ul.list-inline
+        - if current_user.owner_of?(task.team) && task.assign_transition.present?
+          li
+            span = t('task.set')
+            = link_to t("task.actions.#{task.next_role}"),
+                    task_state_path(task.id, state: :assigned), method: :put,
+                    class: 'btn btn-sm btn-primary'
+        - if current_user.owner_of?(task) && task.assign_transition.nil?
+          - if task.progress_transition
+            li
+              span = t('task.set')
+              = link_to t("task.actions.#{task.next_role}"),
+                      task_state_path(task.id, state: task.next_role), method: :put,
+                      class: 'btn btn-sm btn-primary'
+          - elsif task.close_transition
+            li
+              span = t('task.set')
+              = link_to t("task.actions.#{task.next_role}"),
+                      task_state_path(task.id, state: task.next_role), method: :put,
+                      class: 'btn btn-sm btn-primary'

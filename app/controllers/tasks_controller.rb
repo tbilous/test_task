@@ -4,7 +4,8 @@ class TasksController < ApplicationController
   # before_action :load_user, only: %i[create]
   before_action :load_task, only: %i[destroy update edit show]
 
-  respond_to :json, only: %i[destroy update]
+  respond_to :js, only: %i[destroy set_state]
+  respond_to :json, only: :set_state
 
   def create
     @task = @team.tasks.create(strong_params)
@@ -31,10 +32,27 @@ class TasksController < ApplicationController
 
   def show; end
 
+  def set_state
+    @task = Task.find(params[:task_id])
+    case params[:state]
+    when 'assigned' then
+      @task.update(state: :assigned)
+    when 'in_progress' then
+      @task.progress
+    when 'done' then
+      @task.close
+    when 'restart' then
+      @task.update(state: :assigned)
+    else
+      flash[:alert] = t('task.unknown_state')
+    end
+    respond_with(@task)
+  end
+
   private
 
   def strong_params
-    params.require(:task).permit(:title, :body, :status, :task_type, :user_id)
+    params.require(:task).permit(:title, :body, :task_type, :user_id)
   end
 
   def load_team

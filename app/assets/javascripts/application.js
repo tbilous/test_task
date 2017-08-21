@@ -23,3 +23,4 @@
 //= require 'data-confirm-modal'
 //= require collaborators
 //= require home
+//= require tasks

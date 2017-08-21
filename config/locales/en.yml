@@ -37,10 +37,10 @@ en:
           bug_fix: 'Bug Fix'
           code: 'Code'
           test: 'Test'
-        status:
+        state:
           open: 'New'
           assigned: 'Open'
-          in_progress: 'In progress'
+          in_progress: 'In Progress'
           done: 'Done'
       team:
         title: 'Title'
@@ -85,6 +85,15 @@ en:
     type: 'Type'
     my_tasks:
     edit: 'Edit task'
+    set: 'Set state - '
+    success: 'State was updated'
+    actions:
+      open: 'New'
+      assigned: 'Open'
+      in_progress: 'In progress'
+      done: 'Done'
+    unknown_state: 'Unknown state'
+    assign: 'Assign to user'
   home:
     title1: 'My activities'
     title3: 'Wait for approve'

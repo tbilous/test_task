@@ -6,8 +6,6 @@ feature 'I can to manage teams', %q{
   I took new invite to team
   I want to accept invite
   I want to reject invite
-  I took task
-  I want to start task
 } do
 
   include_context 'users'
@@ -20,7 +18,6 @@ feature 'I can to manage teams', %q{
     login_as(user)
     visit authenticated_root_path
   end
-
   context 'as collaborator' do
     describe 'took invite' do
       scenario 'I accept new invite to team', :js, :feature do
@@ -43,18 +40,6 @@ feature 'I can to manage teams', %q{
         end
         within '#userCollTeams' do
           expect(page).to_not have_content team.title
-        end
-      end
-    end
-
-    describe 'took task' do
-      before { collaborator.update!(status: 'approved') }
-
-      scenario 'I see task and can to open he', :js, :feature do
-        within "#task#{tasks.first.id}" do
-          expect(page).to have_content tasks.first.title
-          expect(page).to have_content t("activerecord.attributes.task.status.#{tasks.first.state}")
-          wait_animation
         end
       end
     end
