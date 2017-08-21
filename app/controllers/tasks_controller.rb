@@ -1,8 +1,10 @@
 class TasksController < ApplicationController
   before_action :authenticate_user!
   before_action :load_team, only: %i[create new]
-  # before_action :load_user, only: %i[create]
   before_action :load_task, only: %i[destroy update edit show]
+  before_action :check_pm_access, only: %i[create new]
+  before_action :check_pm_through_access, only: %i[edit update destroy]
+  before_action :state_access, only: :set_state
 
   respond_to :js, only: %i[destroy set_state]
   respond_to :json, only: :set_state
@@ -22,7 +24,7 @@ class TasksController < ApplicationController
   end
 
   def new
-    @task = Task.new
+    @task = @team.tasks.new
     respond_with(@task)
   end
 
@@ -33,7 +35,6 @@ class TasksController < ApplicationController
   def show; end
 
   def set_state
-    @task = Task.find(params[:task_id])
     case params[:state]
     when 'assigned' then
       @task.update(state: :assigned)
@@ -65,5 +66,23 @@ class TasksController < ApplicationController
 
   def load_user
     @user = User.find(params[:user_id])
+  end
+
+  def check_pm_access
+    redirect_to authenticated_root_path unless current_user.owner_of?(@team)
+  end
+
+  def check_pm_through_access
+    redirect_to authenticated_root_path unless current_user.owner_of?(@task.team)
+  end
+
+  def state_access
+    @task = Task.find(params[:task_id])
+    # binding.pry
+    if current_user.owner_of?(@task.team) && (params[:state] == 'in_progress' || params[:state] == 'done')
+      redirect_to authenticated_root_path
+    elsif current_user.owner_of?(@task) && (params[:state] == 'assigned' || params[:state] == 'restart')
+      redirect_to authenticated_root_path
+    end
   end
 end

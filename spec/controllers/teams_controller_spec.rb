@@ -55,7 +55,6 @@ RSpec.describe TeamsController, type: :controller do
       it { expect(subject).to redirect_to authenticated_root_path }
     end
 
-
     it_behaves_like 'when user is authorized' do
       before { subject }
       it { expect(team.title).to eql params[:team][:title] }

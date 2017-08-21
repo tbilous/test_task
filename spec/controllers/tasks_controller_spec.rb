@@ -22,6 +22,11 @@ RSpec.describe TasksController, type: :controller do
       it { expect(subject).to redirect_to new_user_session_path }
     end
 
+    it_behaves_like 'when user not is owner' do
+      it { expect { subject }.to_not change(Task, :count) }
+      it { expect(subject).to redirect_to authenticated_root_path }
+    end
+
     it_behaves_like 'when user is authorized' do
       it { expect { subject }.to change(Task, :count).by(1) }
 
@@ -56,6 +61,11 @@ RSpec.describe TasksController, type: :controller do
       it { expect(task.title).to_not eql params[:task][:title] }
     end
 
+    it_behaves_like 'when user not is owner' do
+      before { subject }
+      it { expect(task.title).to_not eql params[:task][:title] }
+    end
+
     it_behaves_like 'when user is authorized' do
       before { subject }
       it { expect(task.title).to eql params[:task][:title] }
@@ -83,6 +93,11 @@ RSpec.describe TasksController, type: :controller do
       it { expect { subject }.to_not change(Task, :count) }
       it { expect(subject).to have_http_status(401) }
     end
+
+    it_behaves_like 'when user not is owner' do
+      it { expect { subject }.to_not change(Task, :count) }
+      it { expect(subject).to have_http_status(302) }
+    end
   end
 
   describe 'GET #new' do
@@ -93,6 +108,14 @@ RSpec.describe TasksController, type: :controller do
 
       it 'redirect to sign in path' do
         expect(response).to redirect_to new_user_session_path
+      end
+    end
+
+    it_behaves_like 'when user not is owner' do
+      before { subject }
+
+      it 'redirect to sign in path' do
+        expect(response).to redirect_to authenticated_root_path
       end
     end
 
@@ -117,6 +140,14 @@ RSpec.describe TasksController, type: :controller do
       end
     end
 
+    it_behaves_like 'when user not is owner' do
+      before { subject }
+
+      it 'redirect to sign in path' do
+        expect(response).to redirect_to authenticated_root_path
+      end
+    end
+
     it_behaves_like 'when user is authorized' do
       before { subject }
 
@@ -125,34 +156,6 @@ RSpec.describe TasksController, type: :controller do
       end
       it { expect(assigns(:team)).to eq(team) }
     end
-
-    # describe 'when user is authorized' do
-    #   describe 'when user is teammaker' do
-    #     before {get :index}
-    #     before {sign_in(worker)}
-    #     it 'renders the index template' do
-    #       expect(response).to render_template :new
-    #       expect(assigns(:task)).to be_a_new(Task)
-    #     end
-    #   end
-    #
-    #
-    #   describe 'when user is worker' do
-    #     before {get :index}
-    #     before {sign_in(worker)}
-    #     it 'redirect to sign in path' do
-    #       expect(response).to redirect_to new_user_session_path
-    #     end
-    #   end
-    #
-    #   describe 'when user is coworker' do
-    #     let(:coworker) {create(:user)}
-    #     before {sign_in(coworker)}
-    #     it 'redirect to sign in path' do
-    #       expect(response).to redirect_to new_user_session_path
-    #     end
-    #   end
-    # end
   end
 
   describe 'GET #show' do
@@ -178,7 +181,7 @@ RSpec.describe TasksController, type: :controller do
 
   describe 'PUT #set_state' do
     let(:form_params) { {} }
-    let(:task) { create(:task, user_id: user.id, team_id: team.id) }
+    let(:task) { create(:task, user_id: non_owner.id, team_id: team.id) }
     let(:params) do
       { task_id: task.id, format: :js, state: 'open' }.merge(form_params)
     end
@@ -188,18 +191,7 @@ RSpec.describe TasksController, type: :controller do
       it { expect(subject).to have_http_status(401) }
     end
 
-    it_behaves_like 'when user is authorized' do
-      describe 'assigned' do
-        let(:form_params) { { state: 'assigned' } }
-
-        before do
-          subject
-          task.reload
-        end
-        it 'assigns new task to @task' do
-          expect(task.state).to eq('assigned')
-        end
-      end
+    it_behaves_like 'when user not is owner' do
       describe 'in_progress' do
         let(:task) { create(:task, user_id: user.id, team_id: team.id, state: :assigned) }
         let(:form_params) { { state: 'in_progress' } }
@@ -221,6 +213,20 @@ RSpec.describe TasksController, type: :controller do
         end
         it 'assigns new task to @task' do
           expect(task.state).to eq('done')
+        end
+      end
+    end
+
+    it_behaves_like 'when user is authorized' do
+      describe 'assigned' do
+        let(:form_params) { { state: 'assigned' } }
+
+        before do
+          subject
+          task.reload
+        end
+        it 'assigns new task to @task' do
+          expect(task.state).to eq('assigned')
         end
       end
       describe 'restart' do
