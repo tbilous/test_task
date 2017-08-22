@@ -1,9 +1,9 @@
+-  provide(:title, t('.sign_in', default: 'Sign in'))
 .row
   .col-sm-8.col-sm-offset-2.pt-3
     .panel.panel-default.devise-bs
       .panel-heading
-        h4
-          = t('.sign_in', default: 'Sign in')
+        h4 = yield(:title)
       .panel-body
         = form_for(resource, as: resource_name, url: session_path(resource_name), html: { role: 'form' }) do |f|
           .form-group

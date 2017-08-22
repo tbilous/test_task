@@ -1,3 +1,4 @@
-h1 = t('act')
+- provide(:title, t('my_teams'))
+h1 = yield(:title)
 
 = render 'teams/form'

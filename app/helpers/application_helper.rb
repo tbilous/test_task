@@ -88,9 +88,4 @@ module ApplicationHelper
       [I18n.t("locales.#{locale}"), locale]
     end
   end
-
-  def transparentize
-    %I(new_user_session new_user_password new_user_registration new_user_confirmation new_advertisers)
-      .map { |i| current_page?(i) ? 'transparent-body' : '' }.join
-  end
 end

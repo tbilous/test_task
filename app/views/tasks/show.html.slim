@@ -1,4 +1,6 @@
-h1 #{t('activerecord.models.task.one')}: #{@task.title}
+- provide(:title, (t('activerecord.models.task.one') + ': ' +  @task.title ))
+h1 = yield(:title)
+
 hr
 
 #taskBlock

@@ -1,8 +1,8 @@
+-  provide(:title, t('.change_your_password', default: 'Change your password'))
 = bootstrap_devise_error_messages!
 .panel.panel-default.devise-bs
   .panel-heading
-    h4
-      = t('.change_your_password', default: 'Change your password')
+    h4  = yield(:title)
   .panel-body
     = form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put, role: 'form' }) do |f|
       = f.hidden_field :reset_password_token

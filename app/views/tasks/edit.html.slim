@@ -1,4 +1,6 @@
-h1 = t('task.edit')
+- provide(:title, t('task.edit'))
+h1 = yield(:title)
+
 hr
 
 = render 'tasks/form'

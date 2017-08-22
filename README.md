@@ -28,6 +28,7 @@ run rake db:seed:users_seed
 Run rspec spec/ or rake -t
 For parallel testing run
 rake parallel:spec  
+The acceptance tests use capybara webkit, You must have to install his dependencies
 
 * Deployment instructions
 

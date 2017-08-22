@@ -3,7 +3,7 @@ require 'acceptance_helper'
 
 feature 'I can to manage teams', %q{
   As a team owner
-  I want to add and delete team
+  I want to add, edit and delete team
   I want to sent team`s invite to users
 } do
 
@@ -15,7 +15,7 @@ feature 'I can to manage teams', %q{
 
   let!(:users) { create_list(:user, 10) }
   context 'as a team owner' do
-    scenario 'I want to add and delete team', :js, :feature do
+    scenario 'I want to add, edit and delete team', :js, :feature do
       visit authenticated_root_path
       find('.fa-group').trigger('click')
       click_link(t('team.index'))
@@ -23,12 +23,20 @@ feature 'I can to manage teams', %q{
 
       within '#new_team' do
         fill_in 'team_title', with: 'My Awesome Team'
-        click_on t('team.add')
+        click_on t('save')
       end
 
       expect(current_path).to eq team_path(Team.last.id)
+
       within 'h1' do
         expect(page).to have_content 'My Awesome Team'
+      end
+
+      click_on t('team.edit')
+      fill_in 'team_title', with: 'My Awesome was edited'
+      click_on t('save')
+      within 'h1' do
+        expect(page).to have_content 'My Awesome was edited'
       end
 
       visit teams_path
@@ -38,7 +46,8 @@ feature 'I can to manage teams', %q{
       sleep 1
       click_on t('a_no')
       sleep 1
-      expect(page).to have_content 'My Awesome Team'
+
+      expect(page).to have_content 'My Awesome was edited'
 
       within "#myOwnedTeam#{Team.last.id}" do
         find('.btn-danger').trigger('click')
@@ -46,7 +55,7 @@ feature 'I can to manage teams', %q{
       sleep 1
       click_on t('a_yes')
       sleep 1
-      expect(page).to_not have_content 'My Awesome Team'
+      expect(page).to_not have_content 'My Awesome was edited'
     end
     scenario 'I want to sent team`s invite to users', :js, :feature do
       visit authenticated_root_path
@@ -56,7 +65,7 @@ feature 'I can to manage teams', %q{
 
       within '#new_team' do
         fill_in 'team_title', with: 'My Awesome Team'
-        click_on t('team.add')
+        click_on t('save')
       end
 
       click_link(t('collaborator.add'))

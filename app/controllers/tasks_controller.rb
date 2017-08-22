@@ -78,7 +78,6 @@ class TasksController < ApplicationController
 
   def state_access
     @task = Task.find(params[:task_id])
-    # binding.pry
     if current_user.owner_of?(@task.team) && (params[:state] == 'in_progress' || params[:state] == 'done')
       redirect_to authenticated_root_path
     elsif current_user.owner_of?(@task) && (params[:state] == 'assigned' || params[:state] == 'restart')

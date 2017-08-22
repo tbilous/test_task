@@ -46,6 +46,7 @@ en:
         title: 'Title'
   team:
     new: 'New Team'
+    edit: 'Edit Team'
     add: 'Add Team'
     my_teams: 'My teams'
     team_user:
@@ -98,3 +99,4 @@ en:
     title1: 'My activities'
     title3: 'Wait for approve'
     title4: 'Approved teams'
+  error: 'Error'

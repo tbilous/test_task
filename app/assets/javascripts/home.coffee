@@ -15,7 +15,7 @@ class ButtonForm
         el = document.getElementById("appWaiting#{id}")
         $(el).detach()
     $(el).on 'ajax:error', (data, status, xhr) ->
-      App.utils.errorMessage('Error')
+      App.utils.errorMessage(I18n.t('error'))
 
 this.App.buttonform = new ButtonForm()
 
