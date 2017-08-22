@@ -1,0 +1,123 @@
+---
+- hosts: 'webservers'
+  remote_user: 'root'
+
+  vars:
+    ruby_version: '2.4.1'
+    timezone: 'Europe/Amsterdam'
+    deploy_user: 'deploy'
+    deploy_group: 'wheel'
+    home: '/home/{{ deploy_user }}'
+    rbenv_root: '{{ home }}/.rbenv'
+    deploy_app_name: 'tapp'
+    application: '{{ home }}/application/{{ deploy_app_name }}'
+    upassword: 'foobar'
+    postgresql_version: 9.5
+
+    # This will be the main admin user, which is only allowed to connect
+    # from localhost, mainly for provisioning, maintenance and scripts.
+    postgresql_conf_directory: "/etc/postgresql/{{postgresql_version}}/{{postgresql_cluster}}"
+    postgresql_admin_user: "{{deploy_user}}"
+    postgresql_admin_group: "{{postgresql_admin_user}}"
+    postgresql_hba_file: "{{postgresql_conf_directory}}/pg_hba.conf"
+    nodejs_version: "6.x"
+
+  roles:
+    - account
+    - { role: MichaelRigart.passenger-nginx, become: true }
+    - nodejs
+    - monit
+
+  tasks:
+    - name: 'apt | update'
+      action: 'apt update_cache=yes'
+
+    - name: set timezone to {{ timezone }}
+      timezone:
+        name: "{{ timezone }}"
+
+    - name: 'apt | install dependencies'
+      action: 'apt pkg={{ item }}'
+      with_items:
+        - 'build-essential'
+        - 'git'
+        - 'libssl-dev'
+        - 'libyaml-dev'
+        - 'libreadline6-dev'
+        - 'zlib1g-dev'
+        - 'libcurl4-openssl-dev'
+        - 'redis-server'
+        - 'libpq-dev'
+        - 'libmagickwand-dev'
+        - 'nginx'
+        - 'htop'
+
+
+    - name: 'account | create'
+      user: 'name={{ deploy_user }} shell=/bin/bash'
+
+    # rbenv
+    - name: 'rbenv | clone repo'
+      git: 'repo=git://github.com/sstephenson/rbenv.git dest={{ rbenv_root }} accept_hostkey=yes'
+
+    - name: 'rbenv | check ruby-build installed'
+      command: 'test -x {{ rbenv_root }}/plugins/ruby-build'
+      register: 'plugin_installed'
+      ignore_errors: yes
+
+    - name: 'rbenv | add bin to path'
+      shell: echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> {{ home }}/.bashrc
+      when: 'plugin_installed|failed'
+
+    - name: 'rbenv | init'
+      shell: echo 'eval "$(rbenv init -)"' >> {{ home }}/.bashrc
+      when: 'plugin_installed|failed'
+
+    - name: 'rbenv | clone ruby-build repo'
+      git: 'repo=git://github.com/sstephenson/ruby-build.git dest={{ rbenv_root }}/plugins/ruby-build accept_hostkey=yes'
+      when: 'plugin_installed|failed'
+
+    - name: 'rbenv | check ruby {{ ruby_version }} installed'
+      shell: 'RBENV_ROOT={{ rbenv_root }} PATH="$RBENV_ROOT/bin:$PATH" rbenv versions | grep {{ ruby_version }}'
+      register: 'ruby_installed'
+      ignore_errors: yes
+
+    - name: 'rbenv | install ruby {{ ruby_version }}'
+      shell: 'RBENV_ROOT={{ rbenv_root }} PATH="$RBENV_ROOT/bin:$PATH" rbenv install {{ ruby_version }}'
+      when: 'ruby_installed|failed'
+
+    - name: 'rbenv | set global ruby {{ ruby_version }}'
+      shell: 'RBENV_ROOT={{ rbenv_root }} PATH="$RBENV_ROOT/bin:$PATH" rbenv global {{ ruby_version }}'
+      when: 'ruby_installed|failed'
+
+    - name: 'rbenv | rehash'
+      shell: 'RBENV_ROOT={{ rbenv_root }} PATH="$RBENV_ROOT/bin:$PATH" rbenv rehash'
+      when: 'ruby_installed|failed'
+
+    - name: 'rbenv | create .gemrc'
+      lineinfile: 'dest={{ home }}/.gemrc owner={{ deploy_user }} group={{ deploy_user }} mode=0644 line="gem: --no-ri --no-rdoc" create=yes'
+      when: 'ruby_installed|failed'
+
+    # ruby
+    - name: 'ruby | install bundler'
+      shell: 'RBENV_ROOT={{ rbenv_root }} PATH="$RBENV_ROOT/bin:$PATH" rbenv exec gem install bundler'
+      when: 'ruby_installed|failed'
+
+    - name: 'rbenv | change owner'
+      shell: 'chown -R {{ deploy_user }}:{{ deploy_user }} {{ rbenv_root }}'
+      when: 'ruby_installed|failed'
+
+#    nginx
+
+    - name: 'nginx | check config'
+      command: 'test -f /etc/nginx/sites-available/{{ deploy_app_name }}.conf'
+      register: 'nginx_config_copied'
+      ignore_errors: yes
+
+    - name: 'nginx | copy config'
+      template: 'src=configs/nginx.conf dest=/etc/nginx/sites-available/{{ deploy_app_name }}.conf owner=root group=root  mode=0644'
+
+    - name: 'nginx | restart service'
+      service: name=nginx state=restarted
+      when: 'nginx_config_copied|failed'
+

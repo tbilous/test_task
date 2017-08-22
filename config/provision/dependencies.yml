@@ -1,0 +1,10 @@
+#- src: https://github.com/zenoamaro/ansible-postgresql.git
+#  name: postgres
+- src: https://github.com/indix/ansible-monit.git
+  name: monit
+- src: https://github.com/michaelrigart/ansible-role-passenger-nginx.git
+  name: MichaelRigart.passenger-nginx
+- src: https://github.com/geerlingguy/ansible-role-nodejs.git
+  name: nodejs
+#- src: https://github.com/ocha/ansible-role-yarn.git
+#  name: ocha.yarn

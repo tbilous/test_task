@@ -1,0 +1,25 @@
+---
+# account
+- name: 'create group'
+  group:
+    name: "{{ deploy_group }}"
+    state: present
+
+- name: 'allow group to passwordless sudo'
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: '^%{{ deploy_group }}'
+    line: '%{{ deploy_group }} ALL=(ALL) NOPASSWD: ALL'
+
+- name: 'create {{ deploy_user }} and add to group'
+  user: name={{ deploy_user }} password={{ upassword |password_hash('sha512') }} groups={{ deploy_group }} append=yes state=present createhome=yes shell=/bin/bash
+
+- name: 'account | copy authorized keys'
+  shell: 'mkdir -p {{ home }}/.ssh -m 700 && cp /root/.ssh/authorized_keys {{ home }}/.ssh && chown -R {{ deploy_user }}:{{ deploy_user }} {{ home }}/.ssh'
+
+- name: 'account | copy ssh private key'
+  copy: 'src=~/.ssh/id_rsa dest={{ home }}/.ssh/id_rsa owner={{ deploy_user }} group={{ deploy_group }} mode=0600'
+
+- name: 'account | copy ssh public key'
+  copy: 'src=~/.ssh/id_rsa.pub dest={{ home }}/.ssh/id_rsa.pub owner={{ deploy_user }} group={{ deploy_group }} mode=0644'
