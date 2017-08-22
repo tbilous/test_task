@@ -16,22 +16,25 @@ RSpec.configure do |config|
   #   default_url_options[:locale] = I18n.default_locale
   # end
   #
-  Capybara.server_host = '10.0.2.15'
+  Capybara.server_host = 'localhost'
   Capybara.server_port = 5000 + ENV['TEST_ENV_NUMBER'].to_i
   Capybara.default_max_wait_time = 2
   Capybara.save_path = './tmp/capybara_output'
   Capybara.always_include_port = true # for correct app_host
 
-  Capybara.register_driver :poltergeist do |app|
-    # noinspection RubyArgCount
-    Capybara::Poltergeist::Driver.new(
-      app,
-      timeout: 90,
-      js_errors: true,
-      phantomjs_logger: Logger.new(STDOUT),
-      window_size: [1380, 2000]
-    )
-  end
+  # Capybara.register_driver :poltergeist do |app|
+  #   # noinspection RubyArgCount
+  #   Capybara::Poltergeist::Driver.new(
+  #     app,
+  #     timeout: 90,
+  #     js_errors: true,
+  #     phantomjs_logger: Logger.new(STDOUT),
+  #     window_size: [1380, 2000]
+  #   )
+  # end
+  # Capybara.register_driver :selenium do |app|
+  #   Capybara::Selenium::Driver.new(app, :browser => :firefox)
+  # end
 
   # Capybara.javascript_driver = :poltergeist
   # Capybara.javascript_driver = :selenium
@@ -42,9 +45,6 @@ RSpec.configure do |config|
     webkit.allow_url('fonts.googleapis.com')
   end
 
-  # Capybara.register_driver :selenium do |app|
-  #   Capybara::Selenium::Driver.new(app, :browser => :firefox)
-  # end
   Capybara.server = :puma
 
   config.use_transactional_fixtures = false
