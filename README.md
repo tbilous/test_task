@@ -3,7 +3,7 @@ Test task
 
 Ruby  2.4.1, Rails 5.1.3
 ### System dependencies
-* postgressql 5.4 or higher
+* postgressql 9.4 or higher
 
 ### Configuration
 
