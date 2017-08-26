@@ -39,8 +39,8 @@ $ ->
       $('#collaborator_user_id').val(data.id)
       return
 
-    $(thisForm).on 'ajax:success', (data, textStatus, jqXHR) ->
-      user = data.detail[0].user
+    $(thisForm).on 'ajax:success', (e, data, status, xhr) ->
+      user = data.user
       $("#{thisTable} tr:last").after("<tr><td>#{user.use_name}</td><td>#{user.email}</td></tr>");
       $("#{thisTable} tr.js-detach").detach()
       $(searchSelector).typeahead('val', '')

@@ -3,13 +3,12 @@ class ButtonForm
     @el = $(el)
 
   handleForm: (el) =>
-    $(el).on 'ajax:success', (data, status, xhr) ->
-      id = data.detail[0].id
+    $(el).on 'ajax:success', (e, data, status, xhr) ->
+      id = data.id
       if @.dataset.action  == 'reject'
         el = document.getElementById("appWaiting#{id}")
         $(el).detach()
       if @.dataset.action  == 'approve'
-        data = data.detail[0]
         html = App.utils.render('home/home_team', data)
         $("#userCollTeams").prepend(html)
         el = document.getElementById("appWaiting#{id}")
