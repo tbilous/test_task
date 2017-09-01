@@ -71,16 +71,3 @@ The requirement #1 does not exactly state that manager and collaborator roles ar
 3. A user can own multiple teams;
 4. In order to get collaborators, a team owner should invite other potential collaborator users;
 5. A potential collaborator can either accept or reject an invitation to a team.
-
-The deployed version of the app includes a number of pre-seeded users, all with password `foobar`:
-
-* aglae_anderson@marquardtzboncak.biz
-* theresa_lang@rogahn.co
-* mellie.feest@gulgowskikoepp.biz
-* reilly@towneskiles.info
-* verda_abbott@effertz.co
-* laury_borer@goyette.org
-* greg.cronin@hermannblick.biz
-* wellington_streich@heathcote.name
-* keyshawn@jaskolskireichel.name
-* marjory@heel.com
