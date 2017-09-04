@@ -22,6 +22,10 @@ class Api::V1::SessionsController < Api::V1::BaseController
     head :ok
   end
 
+  def me
+    respond_with current_person
+  end
+
   private
 
   def invalid_login_attempt

@@ -2,48 +2,60 @@ require 'rails_helper'
 require_relative 'api_helper'
 
 describe 'Profile API' do
-  describe 'POST registrations/create' do
-    let(:url) { '/api/v1/registrations' }
-
-    context 'registration' do
-      let(:user) { attributes_for(:user) }
-      let(:registered) { create(:user) }
-      context 'user had registered' do
-        before do
-          post_request(url, user_registration: { email: registered.email, password: registered.password })
-        end
-
-        it do
-          expect(response.body).to include_json({ detail: 'Wrong registration params' }.to_json)
-            .at_path('errors')
-        end
+  describe 'POST create' do
+    let(:url) { '/api/v1/profiles' }
+    let(:user) { attributes_for(:user) }
+    let(:registered) { create(:user) }
+    context 'user had registered' do
+      before do
+        post_request(url, user_registration: { email: registered.email, password: registered.password })
       end
-      context 'user is new' do
-        before do
-          post_request(url, user_registration: { email: user[:email], password: user[:password] })
-        end
-        it do
-          expect(response.body).to be_json_eql(User.find_by_email(user[:email]).auth_token.to_json)
-            .at_path('auth_token')
-          expect(response.body).to be_json_eql(User.find_by_email(user[:email]).id.to_json)
-            .at_path('user')
-        end
+
+      it do
+        expect(response.body).to include_json({ detail: 'Wrong registration params' }.to_json)
+          .at_path('errors')
+      end
+    end
+    context 'user is new' do
+      before do
+        post_request(url, user_registration: { email: user[:email], password: user[:password] })
+      end
+      it do
+        expect(response.body).to be_json_eql(User.find_by_email(user[:email]).auth_token.to_json)
+          .at_path('auth_token')
+        expect(response.body).to be_json_eql(User.find_by_email(user[:email]).id.to_json)
+          .at_path('user')
       end
     end
   end
 
-  describe 'POST token/create' do
-    let(:url) { '/api/v1/sign-in' }
+  describe 'GET /me' do
+    let(:user) { create(:user) }
+    let!(:token) { user.generate_auth_token }
+    allowed_attributes = %w(id email)
 
-    context 'get access token' do
-      include_context 'users'
-      before do
-        post_request(url, user_login: { email: user.email, password: user.password })
+    before do
+      get me_api_v1_profiles_path, headers: { 'Authorization' => "Token token=#{token}" }
+    end
+    allowed_attributes.each do |attr|
+      it "returns user #{attr}" do
+        expect(response.body).to be_json_eql(user.send(attr.to_sym).to_json).at_path(attr)
       end
+    end
+  end
 
-      it do
-        user.reload
-        expect(response.body).to be_json_eql(user.auth_token.to_json).at_path('auth_token')
+  describe 'GET /show' do
+    let(:user) { create(:user) }
+    let!(:token) { user.generate_auth_token }
+    allowed_attributes = %w(id email created_at)
+
+    before do
+      get api_v1_profiles_path, headers: { 'Authorization' => "Token token=#{token}" }
+    end
+
+    allowed_attributes.each do |attr|
+      it "returns user #{attr}" do
+        expect(response.body).to be_json_eql(user.send(attr.to_sym).to_json).at_path(attr)
       end
     end
   end

@@ -1,6 +1,6 @@
 class Api::V1::BaseController < ActionController::Base
   before_action :require_login!
-  helper_method :person_signed_in?, :current_user
+  helper_method :person_signed_in?, :current_person
   respond_to :json
 
   def user_signed_in?
@@ -12,7 +12,7 @@ class Api::V1::BaseController < ActionController::Base
     render json: { errors: [{ detail: 'Access denied' }] }, status: 401
   end
 
-  def current_user
+  def current_person
     @_current_user ||= authenticate_token
   end
 

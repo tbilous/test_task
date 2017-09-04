@@ -34,7 +34,7 @@ class User < ApplicationRecord
 
   def generate_auth_token
     token = SecureRandom.hex
-    update_columns(auth_token: token)
+    update_columns(auth_token: token, token_created_at: DateTime.current)
     token
   end
 

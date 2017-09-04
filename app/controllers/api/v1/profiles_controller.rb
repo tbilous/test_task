@@ -1,4 +1,5 @@
-class Api::V1::RegistrationsController < Api::V1::BaseController
+class Api::V1::ProfilesController < Api::V1::BaseController
+  before_action :load_user,only: [:me, :show]
   skip_before_action :require_login!, only: [:create]
   before_action :check_user, only: [:create]
 
@@ -16,11 +17,23 @@ class Api::V1::RegistrationsController < Api::V1::BaseController
     end
   end
 
+  def me
+    respond_with @user
+  end
+
+  def show
+    respond_with @user
+  end
+
   private
+
+  def load_user
+    @user = current_person
+  end
 
   def check_user
     invalid_login_attempt unless params[:user_registration]
-                                 .present? || User.find_by_email(params[:user_registration]).nil?
+                                   .present? || User.find_by_email(params[:user_registration]).nil?
   end
 
   def user_params

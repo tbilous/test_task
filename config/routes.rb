@@ -6,6 +6,9 @@ Rails.application.routes.draw do
         post '/registrations' => 'registrations#create'
         post '/sign-in' => 'sessions#create'
         delete '/sign-out' => 'sessions#destroy'
+        resource :profiles do
+          get :me
+        end
       end
     end
   end

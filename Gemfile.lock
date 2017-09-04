@@ -257,6 +257,8 @@ GEM
     public_suffix (2.0.5)
     puma (3.9.1)
     puma (3.9.1-java)
+    rabl (0.13.1)
+      activesupport (>= 2.3.14)
     rack (2.0.3)
     rack-test (0.6.3)
       rack (>= 1.0)
@@ -464,6 +466,7 @@ DEPENDENCIES
   pry-byebug (= 3.4.2)
   pry-rails (= 0.3.6)
   puma (~> 3.7)
+  rabl (= 0.13.1)
   rack_session_access (= 0.1.1)
   rails (~> 5.1.2)
   rails-controller-testing (= 1.0.2)
@@ -489,4 +492,4 @@ DEPENDENCIES
   web-console (= 3.5.1)
 
 BUNDLED WITH
-   1.15.3
+   1.15.4
