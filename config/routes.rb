@@ -1,6 +1,15 @@
 Rails.application.routes.draw do
 
-  # patch 'tasks/set_state', as: 'state'
+  namespace :api, defaults: { format: :json } do
+    namespace :v1 do
+      as :user do
+        post '/registrations' => 'registrations#create'
+        post '/sign-in' => 'sessions#create'
+        delete '/sign-out' => 'sessions#destroy'
+      end
+    end
+  end
+
   resources :teams do
     resources :collaborators, shallow: true, only: %i(new create update destroy)
     resources :tasks, shallow: true do
